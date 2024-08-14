@@ -21,10 +21,10 @@ class Patient_data_student(models.Model):
     middle_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
     suffix = models.CharField(max_length=256, blank=True)
-    SEX_CHOICES = {
-        "male": "Male",
-        "female": "Female"
-    }
+    SEX_CHOICES = [
+        ("male", "Male"),
+        ("female", "Female"),
+    ]
     sex = models.CharField(max_length=256, choices=SEX_CHOICES)
     age = models.PositiveIntegerField(default=0)
     address = models.CharField(max_length=256)
@@ -59,9 +59,7 @@ class Inventory(models.Model):
     current_stock = models.PositiveIntegerField(default=0)
 
 class Prescription(models.Model):
-    #walang created at date kasi nasa treatment logbook ang date
-    
-
+    pass#walang created at date kasi nasa treatment logbook ang date
 
 #logbooks
 class Medicalcertificate_logbook(models.Model):

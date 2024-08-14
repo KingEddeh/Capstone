@@ -1,0 +1,288 @@
+body {
+    margin-top: 90px;
+    margin-left: 10px;
+}
+.header {
+    background-color: rgb(172, 0, 0);
+    color: white;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 70px;
+    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+
+/* Background Image */
+.background-image-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('dhvsu-clinic.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(5px);
+    z-index: -1;
+}
+
+/* Left section */
+.left-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.dhvsu {
+    margin-left: 10px;
+    width: 50px;
+}
+.dhvsu-logo-header {
+    width: 50px;
+    height: 50px;
+}
+.hospital-logo {
+    width: 50px;
+}
+/* Title Website Header */
+.title {
+    font-family: Roboto, Arial;
+    font-size: 21px;
+}
+
+/* Right Section*/
+.right-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+/* Student Search */
+.search-student {
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    margin-left: 10px;
+    padding-left: 15px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    border: none;
+    border-radius: 15px;
+}
+/* sleeping lines */
+.sleeping-line {
+    padding-left: 19px;
+    padding-right: 16px;
+    padding-top: 17px;
+    padding-bottom: 15px;
+    margin-left: 30px;
+    cursor: pointer;
+
+}
+.sleeping-line:hover {
+    background-color: grey;
+    transition: 0.15s;
+}
+.list-part {
+    width: 35px;
+}
+
+/* SideBar*/
+.sidebar {
+    background-color: rgb(172, 0, 0);
+    position: fixed;
+    top: 70px;
+    right: 0;
+    bottom: 0;
+    width: 70px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* Profile Picture*/
+.dp-part {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
+    cursor: pointer;
+}
+.dp-part:hover {
+    background-color: grey;
+    transition: 0.15s;
+}
+.display-picture {
+    width: 50px;
+    border-radius: 14px;
+}
+
+/* Settings */
+.settings-part {
+    padding-bottom: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
+    cursor: pointer;
+}
+.settings-part:hover {
+    background-color: grey;
+    transition: 0.15s;
+}
+.settings-picture {
+    width: 50px;
+    border-radius: 14px;
+    margin-top: 10px;
+}
+
+/* Category Left */
+.category-container {
+    background-color: rgb(172, 0, 0);
+    height: 300px;
+    width: 300px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.category-part {
+    height: 60px;
+    width: 300px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.category-title {
+    font-family: Roboto, Arial;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+/* Patient Category */
+.patient-part {
+    width: 300px;
+    height: 60px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.patient-button {
+    background-color: white;
+    border: none;
+    color: black;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    padding-left: 85px;
+    padding-right: 85px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.patient-link {
+    text-decoration: none;
+}
+
+/* Logbook Category */
+.logbook-part {
+
+    width: 300px;
+    height: 60px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.logbook-button {
+    background-color: white;
+    border: none;
+    color: black;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    padding-left: 95px;
+    padding-right: 95px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.logbook-link {
+    text-decoration: none;
+}
+
+/* Inventory Category */
+.inventory-part {
+    width: 300px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.inventory-button {
+    background-color: white;
+    border: none;
+    color: black;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    padding-left: 96px;
+    padding-right: 96px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.inventory-link {
+    text-decoration: none;
+}
+
+/* Data Analytics Category*/ 
+.data-analytics-part {
+    width: 300px;
+    height: 60px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.data-button {
+    background-color: white;
+    border: none;
+    color: black;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    padding-left: 79px;
+    padding-right: 79px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.data-link {
+    text-decoration: none;
+}
+/*
+body {
+    background-image: url('dhvsu-background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+*/

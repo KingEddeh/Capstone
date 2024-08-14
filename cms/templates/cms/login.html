@@ -1,0 +1,53 @@
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head> 
+        <meta charset="UTF-8">
+        <title>Record Manamement System with Data Analytics in DHVSU University</title>
+        <link rel="stylesheet" href="{% static 'cms/login/login.css' %}">
+        <link rel="icon" href="{% static 'cms/login/Don_Honorio_Ventura_State_University_logo.png' %}" type="image/x-icon">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    </head>
+    <body style="background-image: url('dhvsu-clinic.jpg')">
+        <div class="dhvsu-img">
+            <img class="dhvsu-logo" src="{% static 'cms/login/Don_Honorio_Ventura_State_University_logo.png' %}" alt="">
+        </div>
+
+        <form method="POST" action="{% url 'Login' %}">
+            {% csrf_token %}
+            <div class="container">
+                <div class="login-preview">
+                    <img class="clinic-logo" src="{% static 'cms/login/clinic-book-logo.png' %}" alt="">
+                    <div class="login-acc">Log in your account</div>
+                    <div class="username-part">
+                        <div class="username-here">Username:</div>
+                        <input class="username-tb" type="text" autocapitalize="on" autocomplete="on" autofocus required name="username">
+                    </div>
+                    <div class="password-part">
+                        <div class="password-here">Password:</div>
+                        <input class="password-tb" type="password" required name="password">
+                    </div>
+                    
+                    <a href="" class="forget-pass">
+                        Forgot Password
+                    </a>
+                    <div class="gmail-here">
+                        or Log in with your Gmail
+                    </div>
+                    <a class="basic-link">
+                        <button class="basic-button" type="submit">Login</button>
+                    </a>
+                    {% if error %}
+                        <div class="error">
+                            <p>{{ error }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </body>
+</html>
