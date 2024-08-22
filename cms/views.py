@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 
-@login_required(login_url="Login")
-def dashboard(request):
-    return render(request, 'cms/MainMenu.html')
 
 def login_view(request):
+
+    if request.user.is_authenticated:
+        logout(request)
+
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -22,3 +23,13 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request, 'cms/login.html', {'form': form})
+
+
+@login_required(login_url="Login")
+def dashboard_view(request):
+    return render(request, 'cms/MainMenu.html')
+
+
+@login_required(login_url="Login")
+def patientdata_view(request):
+    return render(request, 'cms/patient-data.html')
