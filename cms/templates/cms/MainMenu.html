@@ -1,57 +1,6 @@
-{% load bootstrap5 %}
-{% bootstrap_css %}
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Record Manamement System with Data Analytics in DHVSU University</title>
-        <link rel="stylesheet" href="{% static 'cms/dashboard/Main-Menu.css' %}">
-        <link rel="icon" href="{% static 'cms/dashboard/Don_Honorio_Ventura_State_University_logo.png' %}" type="image/x-icon">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-    </head>
-    <body>
-        <div class="background-image-blur"></div>
-        <div class="header">
-            <div class="left-section">
-                <div class="dhvsu">
-                    <img class="dhvsu-logo-header" src="{% static 'cms/dashboard/Don_Honorio_Ventura_State_University_logo.png' %}" alt="">
-                </div>
-                <div class="clinic">
-                    <img class="hospital-logo" src="{% static 'cms/dashboard/hospital-logo.png' %}" alt="">
-                </div>
-                <div class="title">
-                    Don Honorio Ventura State University Clinic
-                </div>
-            </div>
-            <div class="right-section">
-                <div class="search-section">
-                    <input class="search-student" type="text" placeholder="Student Search...">
-                </div>
-                <div class="sleeping-line">
-                    <a href="">
-                        <img class="list-part" src="{% static 'cms/dashboard/list.svg' %}" alt="">
-                    </a>
-                </div>
-            </div>
-            
-        </div>
-
-        <div class="sidebar">
-            <div class="dp-part">
-                <a href="">
-                    <img class="display-picture" src="{% static 'cms/dashboard/blank-profile-picture.webp' %}" alt="">
-                </a>
-            </div>
-            <div class="settings-part">
-                <a href="">
-                    <img class="settings-picture" src="{% static 'cms/dashboard/Settings-icon.png' %}" alt="">
-                </a>
-            </div>
-        </div>
-
-        <div class="category-container">
+{% extends "cms/base.html" %}
+       {% block content %}
+       <div class="category-container">
             <div class="category-part">
                 <div class="category-title">
                     Categories
@@ -77,18 +26,5 @@
                     <button class="data-button" type="submit">Data Analytics</button>
                 </a>
             </div>
-
         </div>
-
-
-
-
-
-
-
-
-
-
-
-    </body>
-</html>
+        {% endblock content %}

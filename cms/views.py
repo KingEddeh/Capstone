@@ -6,9 +6,6 @@ from django.contrib.auth.forms import AuthenticationForm
 
 def login_view(request):
 
-    if request.user.is_authenticated:
-        logout(request)
-
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -33,3 +30,6 @@ def dashboard_view(request):
 @login_required(login_url="Login")
 def patientdata_view(request):
     return render(request, 'cms/patient-data.html')
+
+def inventory_view(request):
+    return render(request, 'cms/inventory.html')
