@@ -15,10 +15,10 @@ class patient(models.Model):
     last_name = models.CharField(max_length=100)
     suffix = models.CharField(max_length=2, blank=True, null=True)
     SEX_CHOICES = [
-        ("m", "Male"),
-        ("f", "Female"),
+        ("Male", "Male"),
+        ("Female", "Female"),
     ]
-    sex = models.CharField(max_length=1, choices=SEX_CHOICES)
+    sex = models.CharField(max_length=6, choices=SEX_CHOICES)
     age = models.PositiveIntegerField(default=0)
     address = models.CharField(max_length=100)
     #for student only

@@ -1,30 +1,39 @@
 {% extends "cms/base.html" %}
-       {% block content %}
-       <div class="category-container">
-            <div class="category-part">
-                <div class="category-title">
-                    Categories
+    {% block content %}
+        <div class="row">
+            <div class="col-lg">
+
+                <div class="category-container">
+                    <div class="category-part">
+                        <div class="category-title">
+                            Categories
+                        </div>
+                    </div>
+                    <div class="patient-part">
+                        <a class="patient-link" href="{% url 'Patient Data' %}">
+                            <button class="patient-button" type="submit">Patient Data</button>
+                        </a>
+                    </div>
+                    <div class="logbook-part">
+                        <a class="logbook-link" href="">
+                            <button class="logbook-button" type="submit">Log Book</button>
+                        </a>
+                    </div>
+                    <div class="inventory-part">
+                        <a class="inventory-link" href="">
+                            <button class="inventory-button" type="submit">Inventory</button>
+                        </a>
+                    </div>
+                    <div class="data-analytics-part">
+                        <a class="data-analytics-link" href="">
+                            <button class="data-button" type="submit">Data Analytics</button>
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="patient-part">
-                <a class="patient-link" href="{% url 'Patient Data' %}">
-                    <button class="patient-button" type="submit">Patient Data</button>
-                </a>
-            </div>
-            <div class="logbook-part">
-                <a class="logbook-link" href="">
-                    <button class="logbook-button" type="submit">Log Book</button>
-                </a>
-            </div>
-            <div class="inventory-part">
-                <a class="inventory-link" href="">
-                    <button class="inventory-button" type="submit">Inventory</button>
-                </a>
-            </div>
-            <div class="data-analytics-part">
-                <a class="data-analytics-link" href="">
-                    <button class="data-button" type="submit">Data Analytics</button>
+
+                <a href= {% url "Patient Add" %}>
+                    <button type="button" class="btn btn-success">Add Patient</button>
                 </a>
             </div>
         </div>
-        {% endblock content %}
+    {% endblock content %}

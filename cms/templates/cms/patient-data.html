@@ -1,93 +1,41 @@
-{% load bootstrap5 %}
-{% bootstrap_css %}
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Record Manamement System with Data Analytics in DHVSU University</title>
-        <link rel="stylesheet" href="{% static 'cms/patient-data/patient-data.css' %}">
-        <link rel="icon" href="{% static 'cms/patient-data/Don_Honorio_Ventura_State_University_logo.png' %}" type="image/x-icon">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-    </head>
-    <body>
-        <div class="background-image-blur"></div>
-        <div class="header">
-            <div class="left-section">
-                <a href="MainMenu.html"><img class="home-icon" src="{% static 'cms/patient-data/home-icon.png' %}" alt=""></a>
-                
-            </div>
-            <div class="middle-section">
-                <div class="patient-search">
-                    Patient Data
-                </div>
-                <img class="search-img" src="{% static 'cms/patient-data/search-img.png' %}" alt="">
-                <input class="student-search-input" type="text" placeholder="Student Search">
-            </div>
-            <div class="right-section"></div>
-        </div>
+{% extends "cms/base.html" %}
 
+{% block content %}
+<div class="container m-5">
 
-
-        <div class="medical-container">
-            <div class="patient-data-name">
-                <div class="patient-data-label">
-                    Patient Data
-                </div>
-            </div>
-            <div>
-
-            </div>
-            <div class="patient-info-container">
-                <div class="profile-name-section-container">
-                    <div class="profile-container">
-                        <img class="profile-picture" src="{% static 'cms/patient-data/gray-pfp.jpg' %}" alt="">
-                    </div>
-                    <div class="name-and-section">
-                        <div class="name">Name: Mikhaela Janna Jimenea Lim</div>
-                        <div class="section">Course/Year/Section: Bachelor of Science in Information Science 4-A</div>
-                    </div>
-                </div>
-                <div class="medical-info-label">
-                    <div class="med-label">Medical Information</div>
-                </div>
-                <div class="medical-history-container">
-                    <div class="diagnosis-part">
-                        <div class="diagnosis-label">
-                            Diagnosis
-                        </div>
-                        <div class="diagnosis-answer">
-                            Sprain
-                        </div>
-                    </div>
-                    <div class="sprain-part">
-                        <div class="sprain-label">
-                            Sprain
-                        </div>
-                        <div class="sprain-answer">
-                            Pain Killer, Ice Compression
-                        </div>
-                    </div>
-                    <div class="history-part">
-                        <div class="history-label">
-                            History
-                        </div>
-                        <div class="history-answer">
-                            Sprain
-                        </div>
-                    </div>
-                    <div class="date-part">
-                        <div class="date-label">
-                            Date
-                        </div>
-                        <div class="date-answer">
-                            06/25/2024
-                        </div>
-                    </div>
-                </div>
-
+    <div class="row">
+    
+        <div class="col">
+            <div class="card card-body">
+                <a class="btn btn-success m-3 btn-block" href= {% url "Patient Add" %}>
+                    Add Patient
+                </a>
+                <hr>
+                <table class="table">
+                    <tr>
+                        <th>ID Number</th>
+                        <th>Name</th>
+                        <th>Contact Number</th>
+                        <th>Sex</th>
+                        <th>Address</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    {% for patient in patients %}
+                    <tr>
+                        <td>{{patient.unique_number}}</td>
+                        <td>{{patient.first_name}} {{patient.middle_name}} {{patient.last_name}} {{patient.suffix}}</th>
+                        <td>{{patient.contact_number}}</td>
+                        <td>{{patient.sex}}</td>
+                        <td>{{patient.address}}</td>
+                        <td><a href=""><button class="btn btn-primary" type="button">Update</button></a></td>
+                        <td><a href=""><button class="btn btn-danger" type="button">Delete</button></a></td>
+                    </tr>
+                    {% endfor %}
+                </table>
             </div>
         </div>
-    </body>
-</html>
+    </div>
+
+</div>
+{% endblock content %}

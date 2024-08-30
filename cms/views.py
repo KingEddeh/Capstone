@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-
+from .models import *
+from .forms import *
 
 def login_view(request):
 
@@ -29,7 +30,26 @@ def dashboard_view(request):
 
 @login_required(login_url="Login")
 def patientdata_view(request):
-    return render(request, 'cms/patient-data.html')
+
+    patients = patient.objects.all().order_by('-created_at')
+
+    context = {'patients':patients}
+
+    return render(request, 'cms/patient-data.html', context)
+
+@login_required(login_url="Login")
+def patientform_add_view(request):
+
+    form = PatientForm()
+    if request.method == "POST":
+        form = PatientForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('Dashboard')
+
+    context = {'form':form}
+
+    return render(request, 'cms/patientform-add.html', context)
 
 def inventory_view(request):
     return render(request, 'cms/inventory.html')
