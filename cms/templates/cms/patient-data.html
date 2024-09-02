@@ -1,11 +1,11 @@
 {% extends "cms/base.html" %}
-
+{% block title %}Patient Data{% endblock title %}
 {% block content %}
-<div class="container m-5">
+<div class="container">
 
     <div class="row">
     
-        <div class="col">
+        <div class="col-lg">
             <div class="card card-body">
                 <a class="btn btn-success m-3 btn-block" href= {% url "Patient Add" %}>
                     Add Patient
@@ -28,8 +28,8 @@
                         <td>{{patient.contact_number}}</td>
                         <td>{{patient.sex}}</td>
                         <td>{{patient.address}}</td>
-                        <td><a href=""><button class="btn btn-primary" type="button">Update</button></a></td>
-                        <td><a href=""><button class="btn btn-danger" type="button">Delete</button></a></td>
+                        <td><a href="{% url "Patient Update" patient.id %}"><button class="btn btn-primary" type="button">Update</button></a></td>
+                        <td><a href="{% url "Patient Delete" patient.id %}"><button class="btn btn-danger" type="button">Delete</button></a></td>
                     </tr>
                     {% endfor %}
                 </table>

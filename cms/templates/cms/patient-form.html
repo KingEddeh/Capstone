@@ -1,0 +1,19 @@
+{% extends "cms/base.html" %}
+{% block title %}Add Patient{% endblock title %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <div class="card card-body">
+                <div class="form-group">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        {{form.as_p}}
+                        <input class="btn btn-success" type="submit" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

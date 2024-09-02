@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -45,11 +45,40 @@ def patientform_add_view(request):
         form = PatientForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('Dashboard')
+            return redirect('Patient Data')
 
     context = {'form':form}
 
-    return render(request, 'cms/patientform-add.html', context)
+    return render(request, 'cms/patient-form.html', context)
 
+@login_required(login_url="Login")
+def patientform_update_view(request, pk):
+
+    patient_instance = get_object_or_404(patient, id=pk)
+    print(patient_instance)
+    form = PatientForm(instance=patient_instance)
+    if request.method == "POST":
+        form = PatientForm(request.POST, instance=patient_instance)
+        if form.is_valid():
+            form.save()
+            return redirect('Patient Data')
+
+    context = {'form':form}
+
+    return render(request, 'cms/patient-form.html', context)
+
+@login_required(login_url="Login")
+def patientform_delete_view(request, pk):
+
+    p = get_object_or_404(patient, id=pk)
+    if request.method == "POST":
+        p.delete()
+        return redirect('Patient Data')
+
+    context = {'p':p}
+
+    return render(request, 'cms/patient-delete.html', context)
+
+@login_required(login_url="Login")
 def inventory_view(request):
     return render(request, 'cms/inventory.html')
