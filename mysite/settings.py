@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'cms',
     'bootstrap5',
     'django_filters',
+    'django_select2',
 ]
 
 MIDDLEWARE = [

@@ -1,5 +1,8 @@
 {% extends "cms/base.html" %}
 {% block title %}Add Medical Certificate Record{% endblock title %}
+
+{% block head %}{{ form.media.css }}{% endblock head %}
+
 {% block content %}
 <div class="container">
     <div class="row">
@@ -16,4 +19,9 @@
         </div>
     </div>
 </div>
+
+<!--for select2 widget-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{{ form.media.js }}
+
 {% endblock content %}

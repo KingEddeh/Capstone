@@ -1,8 +1,6 @@
 from django.db import models
 from django.utils import timezone
 
-#tite 2
-
 class AutoDateTimeField(models.DateTimeField):
     def pre_save(self, model_instance, add):
         return timezone.now()

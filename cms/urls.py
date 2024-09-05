@@ -1,8 +1,9 @@
-from django.urls import path
+from django.urls import include, path
 
 from . import views
 
 urlpatterns = [
+    path("select2/", include("django_select2.urls")),
     path('dashboard/', views.dashboard_view, name="Dashboard"),
     path('login/', views.login_view, name="Login"),
 

@@ -19,7 +19,7 @@ class PatientFilter(django_filters.FilterSet):
 
 class MedcertFilter(django_filters.FilterSet):
     
-    unique_number = django_filters.CharFilter()
+    unique_number = django_filters.CharFilter(field_name="unique_number")
 
     class Meta:
         model = Medicalcertificate_logbook
