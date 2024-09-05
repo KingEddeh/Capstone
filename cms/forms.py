@@ -24,3 +24,16 @@ class PatientForm(forms.ModelForm):
             'emergency_number': forms.TextInput(attrs={'class': 'form-control'}),
             'personal_email': forms.EmailInput(attrs={'class': 'form-control'}),
         }
+
+class MedcertForm(forms.ModelForm):
+    class Meta:
+        model = Medicalcertificate_logbook
+        fields = '__all__'
+        exclude = ('created_at', 'provider')
+    
+        widgets = {
+            'unique_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'purpose': forms.TextInput(attrs={'class': 'form-control'}),
+            'note': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'received': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }

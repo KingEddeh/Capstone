@@ -78,7 +78,7 @@ class Medicalcertificate_logbook(models.Model):
     provider = models.CharField(max_length=100, blank=True)
     
     def save(self, *args, **kwargs):
-        if provider == None:
+        if self.provider == None:
             self.provider = self.user.username
             print(self.provider)
         return super().save(*args, **kwargs)
@@ -105,7 +105,6 @@ class Referral(models.Model):
     created_at = models.DateField(default=timezone.now)
     unique_number = models.ForeignKey('Patient', on_delete=models.RESTRICT)
     description = models.CharField(max_length=1000, null=True, blank=True)
-    treatment_logbook = models.ForeignKey('Treatment_logbook', on_delete=models.RESTRICT)
     referred_hospital = models.CharField(max_length=100)
     provider = models.CharField(max_length=100, )
 
