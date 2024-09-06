@@ -1,9 +1,11 @@
 {% extends "cms/base.html" %}
-{% block title %}Medical Certificate Records{% endblock title %}
+{% block title %}Inventory{% endblock title %}
 {% block head %}{{ form.media.css }}{% endblock head %}
 {% block content %}
 <div class="container">
-
+    <a class="btn btn-primary m-3 btn-block" href= {% url "Medicine Data" %}>
+        Medicine List
+    </a>
     <div class="row">
         <div class="col">
             <div class="card card-body">
@@ -19,7 +21,7 @@
                         
                     </form>
                     <hr>
-                    <form method="get" action="{% url 'Medcert Export' %}">
+                    <form method="get" action="{% url 'Inventory Export' %}">
                         {% for key, value in request.GET.items %}
                             <input type="hidden" name="{{ key }}" value="{{ value }}">
                         {% endfor %}
@@ -33,30 +35,28 @@
     <div class="row my-5">
         <div class="col">
             <div class="card card-body">
-                <a class="btn btn-success m-3 btn-block" href= {% url "Medcert Add" %}>
-                    Add Medical Certificate Record
+                <a class="btn btn-success m-3 btn-block" href= {% url "Inventory Add" %}>
+                    Add Inventory
                 </a>
                 <hr>
                 <div class="table-responsive">
                     <table class="table">
                         <tr class="table-primary">
-                            <th>Patient</th>
-                            <th>Purpose</th>
-                            <th>Note</th>
-                            <th>Received</th>
-                            <th>Provider</th>
+                            <th>Medicine</th>
+                            <th>Initial Stock</th>
+                            <th>Current Stock</th>
+                            <th>Expiration Date</th>
                             <th></th>
                         </tr>
-                        {% for Medicalcertificate_logbook in records %}
+                        {% for Stock in records %}
                         <tr>
-                            <td>{{Medicalcertificate_logbook.unique_number}}</td>
-                            <td>{{Medicalcertificate_logbook.purpose}}</td>
-                            <td>{{Medicalcertificate_logbook.note}}</td>
-                            <td>{{Medicalcertificate_logbook.received}}</td>
-                            <td>{{Medicalcertificate_logbook.provider}}</td>
+                            <td>{{Stock.medicine.brand_name}}</td>
+                            <td>{{Stock.initial_stocks}}</td>
+                            <td>{{Stock.current_stock}}</td>
+                            <td>{{Stock.expiration_date}}</td>
                             <td>
-                                <a href="{% url "Medcert Update" Medicalcertificate_logbook.id %}"><button class="btn btn-primary" type="button">Update</button></a>
-                                <a href="{% url "Medcert Delete" Medicalcertificate_logbook.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
+                                <a href="{% url "Inventory Update" Stock.id %}"><button class="btn btn-primary" type="button">Update</button></a>
+                                <a href="{% url "Inventory Delete" Stock.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
                             </td>
                         </tr>
                         {% endfor %}

@@ -4,7 +4,6 @@ from .models import *
 from django_select2 import forms as s2forms
 
 
-
 class PatientForm(forms.ModelForm):
     class Meta:
         model = patient
@@ -35,17 +34,76 @@ class MedcertForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('created_at', 'provider')
         widgets = {
-            'unique_number': s2forms.Select2Widget(attrs={'class': 'form-control'}),
+            'unique_number': s2forms.Select2Widget(attrs={'class': 'form-select'}), 
             'purpose': forms.TextInput(attrs={'class': 'form-control'}),
             'note': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'received': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
-class MedcertSelect2Widget(s2forms.ModelSelect2Widget):
-    search_fields = [
-        "unique_number",
-        "first_name__icontains",
-        "middle_name__icontains",
-        "last_name__icontains",
-        "suffix__icontains",
-    ]
+
+
+class ReferralForm(forms.ModelForm):
+    class Meta:
+        model = Referral
+        fields = '__all__'
+        exclude = ('created_at', 'provider')
+        widgets = {
+            'unique_number': s2forms.Select2Widget(attrs={'class': 'form-select'}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),
+            'referred_hospital': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+
+class TreatmentForm(forms.ModelForm):
+    class Meta:
+        model = Treatment_logbook
+        fields = '__all__'
+        exclude = ('created_at', 'provider')
+        widgets = {
+            'unique_number': s2forms.Select2Widget(attrs={'class': 'form-select'}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+
+class MedicineForm(forms.ModelForm):
+    class Meta:
+        model = Medicine
+        fields = '__all__'
+        exclude = ('created_at', 'provider')
+        widgets = {
+            'brand_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'generic_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'dosage_form': forms.TextInput(attrs={'class': 'form-control'}),
+            'dosage_strength': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+
+class InventoryForm(forms.ModelForm):
+    class Meta:
+        model = Stock
+        fields = '__all__'
+        exclude = ('created_at', 'initial_stocks', 'current_stock', 'provider')
+        widgets = {
+            'medicine': s2forms.Select2Widget(attrs={'class': 'form-select'}),
+            'stock_quantity': forms.NumberInput(attrs={'class': 'form-control'}),
+            'unit': s2forms.Select2Widget(attrs={'class': 'form-select'}),
+            'quantity_per_unit': forms.NumberInput(attrs={'class': 'form-control'}),
+            'expiration_date': forms.DateInput(attrs={'class': 'form-control'}),
+        }
+
+
+
+class PrescriptionForm(forms.ModelForm):
+    class Meta:
+        model = Prescription
+        fields = '__all__'
+        exclude = ('created_at', 'provider')
+        widgets = {
+            'treatment_logbook': s2forms.Select2Widget(attrs={'class': 'form-select'}),
+            'medicine': s2forms.Select2Widget(attrs={'class': 'form-select'}),
+            'quantity_prescribed': forms.NumberInput(attrs={'class': 'form-control'}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),
+        }

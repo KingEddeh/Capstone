@@ -31,34 +31,36 @@
 
     <div class="row my-5">
         <div class="col-lg">
-            <div class="card card-body overflow-scroll">
+            <div class="card card-body table-responsive">
                 <a class="btn btn-success m-3 btn-block" href= {% url "Patient Add" %}>
                     Add Patient
                 </a>
                 <hr>
-                <table class="table">
-                    <tr class="table-primary">
-                        <th>ID Number</th>
-                        <th>Name</th>
-                        <th>Contact Number</th>
-                        <th>Sex</th>
-                        <th>Address</th>
-                        <th></th>
-                    </tr>
-                    {% for patient in patients %}
-                    <tr>
-                        <td>{{patient.unique_number}}</td>
-                        <td>{{patient.first_name}} {{patient.middle_name}} {{patient.last_name}} {{patient.suffix}}</th>
-                        <td>{{patient.contact_number}}</td>
-                        <td>{{patient.sex}}</td>
-                        <td>{{patient.address}}</td>
-                        <td>
-                            <a href="{% url "Patient Update" patient.id %}"><button class="btn btn-primary" type="button">Update</button></a>
-                            <a href="{% url "Patient Delete" patient.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr class="table-primary">
+                            <th>ID Number</th>
+                            <th>Name</th>
+                            <th>Contact Number</th>
+                            <th>Sex</th>
+                            <th>Address</th>
+                            <th></th>
+                        </tr>
+                        {% for patient in patients %}
+                        <tr>
+                            <td>{{patient.unique_number}}</td>
+                            <td>{{patient.first_name}} {{patient.middle_name}} {{patient.last_name}} {{patient.suffix}}</th>
+                            <td>{{patient.contact_number}}</td>
+                            <td>{{patient.sex}}</td>
+                            <td>{{patient.address}}</td>
+                            <td>
+                                <a href="{% url "Patient Update" patient.id %}"><button class="btn btn-primary" type="button">Update</button></a>
+                                <a href="{% url "Patient Delete" patient.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
         </div>
     </div>

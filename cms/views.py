@@ -128,9 +128,9 @@ def medcertform_add_view(request):
         form = MedcertForm(request.POST)
         if form.is_valid():
             #add provider name to field from logged in user
-            instance = form.save(commit=False)
-            instance.provider = request.user.username
-            instance.save()
+            medcert_instance = form.save(commit=False)
+            medcert_instance.provider = request.user.username
+            medcert_instance.save()
             return redirect('Medcert Data')
 
     context = {'form':form}
@@ -140,10 +140,10 @@ def medcertform_add_view(request):
 @login_required(login_url="Login")
 def medcertform_update_view(request, pk):
 
-    medcert_instance = get_object_or_404(Medicalcertificate_logbook, id=pk)
-    form = MedcertForm(instance=medcert_instance)
+    referral_instance = get_object_or_404(Medicalcertificate_logbook, id=pk)
+    form = MedcertForm(instance=referral_instance)
     if request.method == "POST":
-        form = MedcertForm(request.POST, instance=medcert_instance)
+        form = MedcertForm(request.POST, instance=referral_instance)
         if form.is_valid():
             form.save()
             return redirect('Medcert Data')
@@ -189,8 +189,395 @@ def medcertform_export_view(request):
 
 
 
-
-#Inventory
+#Referral
 @login_required(login_url="Login")
-def inventory_view(request):
-    return render(request, 'cms/inventory.html')
+def referraldata_view(request):
+
+    myFilter = ReferralFilter(request.GET, queryset=Referral.objects.all())
+    records = myFilter.qs
+
+    context = {'records':records, 'myFilter':myFilter}
+
+    return render(request, 'cms/referral-data.html', context)
+
+@login_required(login_url="Login")
+def referralform_add_view(request):
+
+    form = ReferralForm()
+    if request.method == "POST":
+        form = ReferralForm(request.POST)
+        if form.is_valid():
+            referral_instance = form.save(commit=False)
+            referral_instance.provider = request.user.username
+            referral_instance.save()
+            return redirect('Referral Data')
+
+    context = {'form':form}
+
+    return render(request, 'cms/referral-form.html', context)
+
+@login_required(login_url="Login")
+def referralform_update_view(request, pk):
+
+    referral_instance = get_object_or_404(Referral, id=pk)
+    form = ReferralForm(instance=referral_instance)
+    if request.method == "POST":
+        form = ReferralForm(request.POST, instance=referral_instance)
+        if form.is_valid():
+            form.save()
+            return redirect('Referral Data')
+
+    context = {'form':form}
+
+    return render(request, 'cms/referral-form.html', context)
+
+@login_required(login_url="Login")
+def referralform_delete_view(request, pk):
+
+    p = get_object_or_404(Referral, id=pk)
+    if request.method == "POST":
+        p.delete()
+        return redirect('Referral Data')
+
+    context = {'p':p}
+
+    return render(request, 'cms/referral-delete.html', context)
+
+@login_required(login_url="Login")
+def referralform_export_view(request):
+
+    records = Referral.objects.all()
+    myFilter = ReferralFilter(request.GET, queryset=records)
+    records = myFilter.qs
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="filtered_queryset.csv"'
+    
+    writer = csv.writer(response)
+
+    field_names = [
+        field.name for field in Referral._meta.get_fields() 
+        if not field.is_relation or field.many_to_one
+        ]
+    writer.writerow(field_names)
+
+    for obj in records:
+        writer.writerow([getattr(obj, field) for field in field_names])
+    
+    return response
+
+
+
+#Treatment Logbook
+def treatmentdata_view(request):
+
+    myFilter = TreatmentFilter(request.GET, queryset=Treatment_logbook.objects.all())
+    records = myFilter.qs
+
+    context = {'records':records, 'myFilter':myFilter}
+
+    return render(request, 'cms/treatment-data.html', context)
+
+@login_required(login_url="Login")
+def treatmentform_add_view(request):
+
+    form = TreatmentForm()
+    if request.method == "POST":
+        form = TreatmentForm(request.POST)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.provider = request.user.username
+            form.save()
+            return redirect('Treatment Data')
+
+    context = {'form':form}
+
+    return render(request, 'cms/treatment-form.html', context)
+
+@login_required(login_url="Login")
+def treatmentform_update_view(request, pk):
+
+    treatment_instance = get_object_or_404(Treatment_logbook, id=pk)
+    form = TreatmentForm(instance=treatment_instance)
+    if request.method == "POST":
+        form = TreatmentForm(request.POST, instance=treatment_instance)
+        if form.is_valid():
+            form.save()
+            return redirect('Treatment Data')
+
+    context = {'form':form}
+
+    return render(request, 'cms/treatment-form.html', context)
+
+@login_required(login_url="Login")
+def treatmentform_delete_view(request, pk):
+
+    p = get_object_or_404(Treatment_logbook, id=pk)
+    if request.method == "POST":
+        p.delete()
+        return redirect('Treatment Data')
+
+    context = {'p':p}
+
+    return render(request, 'cms/treatment-delete.html', context)
+
+@login_required(login_url="Login")
+def treatmentform_export_view(request):
+
+    records = Treatment_logbook.objects.all()
+    myFilter = TreatmentFilter(request.GET, queryset=records)
+    records = myFilter.qs
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="filtered_queryset.csv"'
+    
+    writer = csv.writer(response)
+
+    field_names = [
+        field.name for field in Treatment_logbook._meta.get_fields() 
+        if not field.is_relation or field.many_to_one
+        ]
+    writer.writerow(field_names)
+
+    for obj in records:
+        writer.writerow([getattr(obj, field) for field in field_names])
+    
+    return response
+
+
+
+#Inventory----------------------------------------------------------------
+
+@login_required(login_url="Login")
+def inventorydata_view(request):
+
+    myFilter = InventoryFilter(request.GET, queryset=Stock.objects.all().order_by('expiration_date'))
+    records = myFilter.qs
+
+    context = {'records':records, 'myFilter':myFilter}
+
+    return render(request, 'cms/inventory-data.html', context)
+
+@login_required(login_url="Login")
+def inventoryform_add_view(request):
+
+    form = InventoryForm()
+    if request.method == "POST":
+        form = InventoryForm(request.POST)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.provider = request.user.username
+            form.save()
+            return redirect('Inventory Data')
+
+    context = {'form':form}
+
+    return render(request, 'cms/inventory-form.html', context)
+
+@login_required(login_url="Login")
+def inventoryform_update_view(request, pk):
+
+    inventory_instance = get_object_or_404(Stock, id=pk)
+    form = InventoryForm(instance=inventory_instance)
+    if request.method == "POST":
+        form = InventoryForm(request.POST, instance=inventory_instance)
+        if form.is_valid():
+            form.save()
+            return redirect('Inventory Data')
+        
+    context = {'form':form}
+
+    return render(request, 'cms/inventory-form.html', context)
+
+@login_required(login_url="Login")
+def inventoryform_delete_view(request, pk):
+
+    p = get_object_or_404(Stock, id=pk)
+    if request.method == "POST":
+        p.delete()
+        return redirect('Inventory Data')
+
+    context = {'p':p}
+
+    return render(request, 'cms/inventory-delete.html', context)
+
+@login_required(login_url="Login")
+def inventoryform_export_view(request):
+
+    records = Stock.objects.all()
+    myFilter = InventoryFilter(request.GET, queryset=records)
+    records = myFilter.qs
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="filtered_queryset.csv"'
+    
+    writer = csv.writer(response)
+
+    field_names = [
+        field.name for field in Stock._meta.get_fields() 
+        if not field.is_relation or field.many_to_one
+        ]
+    writer.writerow(field_names)
+
+    for obj in records:
+        writer.writerow([getattr(obj, field) for field in field_names])
+    
+    return response
+
+
+
+#medicine
+@login_required(login_url="Login")
+def medicinedata_view(request):
+
+    myFilter = MedicineFilter(request.GET, queryset=Medicine.objects.all())
+    records = myFilter.qs
+
+    context = {'records':records, 'myFilter':myFilter}
+
+    return render(request, 'cms/medicine-data.html', context)
+
+@login_required(login_url="Login")
+def medicineform_add_view(request):
+
+    form = MedicineForm()
+    if request.method == "POST":
+        form = MedicineForm(request.POST)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.provider = request.user.username
+            form.save()
+            return redirect('Medicine Data')
+
+    context = {'form':form}
+
+    return render(request, 'cms/medicine-form.html', context)
+
+@login_required(login_url="Login")
+def medicineform_update_view(request, pk):
+
+    medicine_instance = get_object_or_404(Medicine, id=pk)
+    form = MedicineForm(instance=medicine_instance)
+    if request.method == "POST":
+        form = MedicineForm(request.POST, instance=medicine_instance)
+        if form.is_valid():
+            form.save()
+            return redirect('Medicine Data')
+        
+    context = {'form':form}
+
+    return render(request, 'cms/medicine-form.html', context)
+
+@login_required(login_url="Login")
+def medicineform_delete_view(request, pk):
+
+    p = get_object_or_404(Medicine, id=pk)
+    if request.method == "POST":
+        p.delete()
+        return redirect('Medicine Data')
+
+    context = {'p':p}
+
+    return render(request, 'cms/medicine-delete.html', context)
+
+@login_required(login_url="Login")
+def medicineform_export_view(request):
+
+    records = Medicine.objects.all()
+    myFilter = MedicineFilter(request.GET, queryset=records)
+    records = myFilter.qs
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="filtered_queryset.csv"'
+    
+    writer = csv.writer(response)
+
+    field_names = [
+        field.name for field in Treatment_logbook._meta.get_fields() 
+        if not field.is_relation or field.many_to_one
+        ]
+    writer.writerow(field_names)
+
+    for obj in records:
+        writer.writerow([getattr(obj, field) for field in field_names])
+    
+    return response
+
+
+
+#Prescription
+@login_required(login_url="Login")
+def prescriptiondata_view(request, fk):
+
+    myFilter = PrescriptionFilter(request.GET, queryset=Prescription.objects.filter(treatment_logbook__id=fk))
+    records = myFilter.qs
+
+    context = {'records':records, 'myFilter':myFilter}
+
+    return render(request, 'cms/prescription-data.html', context)
+
+@login_required(login_url="Login")
+def prescriptionform_add_view(request):
+
+    form = PrescriptionForm()
+    if request.method == "POST":
+        form = PrescriptionForm(request.POST)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.provider = request.user.username
+            form.save()
+            return redirect('Treatment Data')
+
+    context = {'form':form}
+
+    return render(request, 'cms/prescription-form.html', context)
+
+@login_required(login_url="Login")
+def prescriptionform_update_view(request, pk):
+
+    prescription_instance = get_object_or_404(Prescription, id=pk)
+    form = PrescriptionForm(instance=prescription_instance)
+    if request.method == "POST":
+        form = PrescriptionForm(request.POST, instance=prescription_instance)
+        if form.is_valid():
+            form.save()
+            return redirect('Treatment Data')
+        
+    context = {'form':form}
+
+    return render(request, 'cms/prescription-form.html', context)
+
+@login_required(login_url="Login")
+def prescriptionform_delete_view(request, pk):
+
+    p = get_object_or_404(Prescription, id=pk)
+    if request.method == "POST":
+        p.delete()
+        return redirect('Treatment Data')
+
+    context = {'p':p}
+
+    return render(request, 'cms/prescription-delete.html', context)
+
+@login_required(login_url="Login")
+def prescriptionform_export_view(request):
+
+    records = Prescription.objects.all()
+    myFilter = PrescriptionFilter(request.GET, queryset=records)
+    records = myFilter.qs
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="filtered_queryset.csv"'
+    
+    writer = csv.writer(response)
+
+    field_names = [
+        field.name for field in Prescription._meta.get_fields() 
+        if not field.is_relation or field.many_to_one
+        ]
+    writer.writerow(field_names)
+
+    for obj in records:
+        writer.writerow([getattr(obj, field) for field in field_names])
+    
+    return response

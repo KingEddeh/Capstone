@@ -1,5 +1,5 @@
 {% extends "cms/base.html" %}
-{% block title %}Delete Patient{% endblock title %}
+{% block title %}Delete Referral Record{% endblock title %}
 {% block content %}
 <div class="container">
 
@@ -10,9 +10,9 @@
                 <h5 class="card-title">Are you sure you want to delete "{{p}}"?</h5>
                 <div class="card-body">
                     <div class="form-group">
-                        <form action="{% url 'Patient Delete' p.id %}" method="POST">
+                        <form action="{% url 'Referral Delete' p.id %}" method="POST">
                             {% csrf_token %}
-                            <a href="{% url "Patient Data" %}" class="btn btn-secondary">Cancel</a>
+                            <a href="{% url "Referral Data" %}" class="btn btn-secondary">Cancel</a>
                             <input class="btn btn-danger" type="submit" value="Delete">
                         </form>
                     </div>
