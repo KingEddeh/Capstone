@@ -100,8 +100,9 @@ class PrescriptionForm(forms.ModelForm):
     class Meta:
         model = Prescription
         fields = '__all__'
-        exclude = ('created_at', 'provider')
+        exclude = ('provider',)
         widgets = {
+            'expiration_date': forms.DateInput(attrs={'class': 'form-control'}),
             'treatment_logbook': s2forms.Select2Widget(attrs={'class': 'form-select'}),
             'medicine': s2forms.Select2Widget(attrs={'class': 'form-select'}),
             'quantity_prescribed': forms.NumberInput(attrs={'class': 'form-control'}),

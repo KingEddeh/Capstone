@@ -7,3 +7,4 @@ urlpatterns = [
     path('cms/', include('cms.urls')),
     path('', RedirectView.as_view(url='cms/dashboard/')),
 ]
+admin.site.site_header = 'Admin'

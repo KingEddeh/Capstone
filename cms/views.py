@@ -7,6 +7,10 @@ from .forms import *
 from .filters import *
 import csv
 from django.http import HttpResponse
+import plotly.express as px
+from django.db.models.functions import ExtractMonth, ExtractYear
+from django.db.models import Sum
+from django.db.models import F
 
 def login_view(request):
 
@@ -581,3 +585,62 @@ def prescriptionform_export_view(request):
         writer.writerow([getattr(obj, field) for field in field_names])
     
     return response
+
+def chart_view(request):
+    # Get selected medicines and years from the request (via GET method)
+    selected_medicines = request.GET.getlist('medicines')
+    selected_years = request.GET.getlist('years')
+
+    # Query data only if medicines and years are selected
+    if selected_medicines and selected_years:
+        # Filter prescriptions by selected medicines and years, then group by month and year
+        data = (Prescription.objects
+                .filter(
+                    medicine__in=selected_medicines,
+                    created_at__year__in=selected_years
+                )
+                .annotate(
+                    month=ExtractMonth('created_at'),
+                    year=ExtractYear('created_at'),
+                    medicine_name=F('medicine__medicine__brand_name')  # Accessing brand_name through Stock and Medicine
+                )
+                .values(
+                    'month', 'year', 'medicine_name'
+                )
+                .annotate(
+                    total_quantity=Sum('quantity_prescribed')
+                )
+                .order_by('year', 'month'))
+
+        # Prepare data for Plotly
+        months = [item['month'] for item in data]
+        years = [f"{item['medicine_name']} ({item['year']})" for item in data]
+        quantities = [item['total_quantity'] for item in data]
+
+        # Create Plotly chart with 12 months on the x-axis
+        fig = px.line(x=months, y=quantities, color=years, 
+                      title="Medicine Usage by Month",
+                      labels={'x': 'Month', 'y': 'Quantity Prescribed'})
+
+        # Set the x-axis labels to be the 12 months
+        fig.update_xaxes(tickmode='array', tickvals=list(range(1, 13)),
+                         ticktext=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+
+        # Convert the Plotly figure to HTML
+        chart = fig.to_html(full_html=False)
+    else:
+        chart = None  # No data to display if nothing is selected
+
+    # Get all medicines and years for the selection form
+    medicines = Medicine.objects.values_list('id', 'brand_name').distinct()
+    years = Prescription.objects.annotate(year=ExtractYear('created_at')).values_list('year', flat=True).distinct()
+
+    # Render the template with the chart and form data
+    return render(request, 'cms/chart.html', {
+        'chart': chart,
+        'medicines': medicines,
+        'years': years,
+    })
+
+

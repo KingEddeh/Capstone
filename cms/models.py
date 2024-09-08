@@ -9,7 +9,7 @@ class AutoDateTimeField(models.DateTimeField):
 
 
 class patient(models.Model):
-    created_at = models.DateField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
     unique_number = models.CharField(unique=True, max_length=10)
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100, blank=True)
@@ -39,7 +39,7 @@ class patient(models.Model):
 
 
 class Medicine(models.Model):
-    created_at = models.DateField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
     brand_name = models.CharField(max_length=100)
     generic_name = models.CharField(max_length=100)
     dosage_form = models.CharField(max_length=100)
@@ -51,7 +51,7 @@ class Medicine(models.Model):
 
 
 class Stock(models.Model):
-    created_at = models.DateField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
     medicine = models.ForeignKey("Medicine", on_delete=models.RESTRICT)
     stock_quantity = models.PositiveIntegerField(default=0)
     choices = [
@@ -61,9 +61,9 @@ class Stock(models.Model):
     unit = models.CharField(max_length=5, choices=choices)
     quantity_per_unit = models.PositiveIntegerField(default=1)
     expiration_date = models.DateField()
-    initial_stocks = models.PositiveIntegerField(blank=True)
-    current_stock = models.PositiveIntegerField(blank=True)
-    provider = models.CharField(max_length=100, blank=True)
+    initial_stocks = models.PositiveIntegerField(blank=True, null=True)
+    current_stock = models.PositiveIntegerField(blank=True, null=True)
+    provider = models.CharField(max_length=100, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if self.provider == None:
@@ -74,13 +74,13 @@ class Stock(models.Model):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.medicine.brand_name} Stock #{self.id} - EXP: {self.expiration_date}'
+        return f'{self.medicine.brand_name} Stock #{self.id}'
 
 
 
 #logbooks
 class Medicalcertificate_logbook(models.Model):
-    created_at = models.DateField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
     unique_number = models.ForeignKey('Patient', on_delete=models.RESTRICT)
     purpose = models.CharField(max_length=100)
     note = models.CharField(max_length=1000, null=True, blank=True)
@@ -98,7 +98,7 @@ class Medicalcertificate_logbook(models.Model):
 
 
 class Treatment_logbook(models.Model):
-    created_at = models.DateField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
     unique_number = models.ForeignKey('Patient', on_delete=models.RESTRICT)
     description = models.CharField(max_length=1000)
     provider = models.CharField(max_length=100)
@@ -114,7 +114,7 @@ class Treatment_logbook(models.Model):
 
 
 class Referral(models.Model):
-    created_at = models.DateField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
     unique_number = models.ForeignKey('Patient', on_delete=models.RESTRICT)
     description = models.CharField(max_length=1000, null=True, blank=True)
     referred_hospital = models.CharField(max_length=100)
@@ -133,7 +133,7 @@ class Referral(models.Model):
 
 #for treatment logbook
 class Prescription(models.Model):
-    created_at = models.DateField(default=timezone.now)
+    created_at = models.DateTimeField(blank=True)
     treatment_logbook = models.ForeignKey('Treatment_logbook', on_delete=models.CASCADE, related_name='prescriptions')
     medicine = models.ForeignKey('Stock', on_delete=models.RESTRICT)
     quantity_prescribed = models.PositiveIntegerField(default=1)

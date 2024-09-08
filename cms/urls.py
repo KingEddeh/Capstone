@@ -57,4 +57,7 @@ urlpatterns = [
     path('prescriptionform-update/<str:pk>/', views.prescriptionform_update_view, name="Prescription Update"),
     path('prescriptionform-delete/<str:pk>/', views.prescriptionform_delete_view, name="Prescription Delete"),
     path('prescriptionform-export/', views.prescriptionform_export_view, name="Prescription Export"),
+
+    #chart
+    path('chart/', views.chart_view, name="chart"),
 ]

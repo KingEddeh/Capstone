@@ -1,0 +1,46 @@
+{% extends "cms/base.html" %}
+{% block title %}Data Analytics{% endblock title %}
+{% block content %}
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-sm">
+            <div class="card">
+                <h5 class="card-title">Medicine Usage by Month</h5>
+                <div class="card-body">
+                    <div class="form-group">
+                        <!-- Form to select medicines and years -->
+                        <form method="GET" action="{% url 'chart' %}">
+                            <select name="medicines" class="form-select" aria-label="Select Medicines:" multiple>
+                                {% for id, brand_name in medicines %}
+                                    <option value="{{ id }}">{{ brand_name }}</option>
+                                {% endfor %}
+                            </select>
+
+                            <select name="years" class="form-select" aria-label="Select Years:">
+                                {% for year in years %}
+                                    <option value="{{ year }}">{{ year }}</option>
+                                {% endfor %}
+                            </select>
+
+                            <input class="btn btn-primary btn-block" type="submit" value="Show Chart">
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Display the chart -->
+        <div>
+            {% if chart %}
+                {{ chart|safe }}
+            {% else %}
+                <h3 class="card card-title">Please select medicines and years to display the chart.</h3>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
