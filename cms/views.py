@@ -9,8 +9,9 @@ import csv
 from django.http import HttpResponse
 import plotly.express as px
 from django.db.models.functions import ExtractMonth, ExtractYear
-from django.db.models import Sum
-from django.db.models import F
+from django.utils import timezone
+from datetime import timedelta
+
 
 def login_view(request):
 
@@ -29,9 +30,37 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'cms/login.html', {'form': form})
 
+
+
+#for dates
+today = timezone.now().date()
+start_of_week = today - timedelta(days=today.weekday())  # Monday
+end_of_week = start_of_week + timedelta(days=6)          # Sunday
+
+
 @login_required(login_url="Login")
 def dashboard_view(request):
-    return render(request, 'cms/MainMenu.html')
+
+    #patient statistic 1:
+    patient_filter_type = request.GET.get('patient_filter')
+    number_of_patients = patient.objects.all().count()
+
+
+
+
+
+    #patient statistic 2:
+    treatment_count = Treatment_logbook.objects.filter(created_at__date=today).count()
+    referral_count = Referral.objects.filter(created_at__date=today).count()
+    medical_certificate_count = Medicalcertificate_logbook.objects.filter(created_at__date=today).count()
+    total_records_today = treatment_count + referral_count + medical_certificate_count
+
+    context = {
+        'number_of_patients':number_of_patients,
+        'total_records_today':total_records_today
+        }
+
+    return render(request, 'cms/MainMenu.html', context)
 
 
 #Patient
