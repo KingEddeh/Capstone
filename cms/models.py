@@ -117,7 +117,17 @@ class Referral(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     unique_number = models.ForeignKey('Patient', on_delete=models.RESTRICT)
     description = models.CharField(max_length=1000, null=True, blank=True)
-    referred_hospital = models.CharField(max_length=100)
+    HOSPITAL_CHOICES = [
+        ("The Medical City Clark", "The Medical City Clark"),
+        ("Angeles University Foundation Medical Center", "Angeles University Foundation Medical Center"),
+        ("Mother Teresa of Calcutta Medical Center", "Mother Teresa of Calcutta Medical Center"),
+        ("Jose B. Lingad Memorial Regional Hospital", "Jose B. Lingad Memorial Regional Hospital"),
+        ("San Fernandino Hospital", "San Fernandino Hospital"),
+        ("Mt. Carmel Medical Center", "Mt. Carmel Medical Center"),
+        ("Sacred Heart Medical Center", "Sacred Heart Medical Center"),
+        ("Our Lady of Mt. Carmel Medical Center", "Our Lady of Mt. Carmel Medical Center"),
+    ]
+    referred_hospital = models.CharField(max_length=100, choices=HOSPITAL_CHOICES)
     provider = models.CharField(max_length=100, blank=True)
 
     def save(self, *args, **kwargs):

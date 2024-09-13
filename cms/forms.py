@@ -50,7 +50,7 @@ class ReferralForm(forms.ModelForm):
         widgets = {
             'unique_number': s2forms.Select2Widget(attrs={'class': 'form-select'}),
             'description': forms.TextInput(attrs={'class': 'form-control'}),
-            'referred_hospital': forms.TextInput(attrs={'class': 'form-control'}),
+            'referred_hospital': s2forms.Select2Widget(attrs={'class': 'form-select'}),
         }
 
 
