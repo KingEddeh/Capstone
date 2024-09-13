@@ -30,6 +30,11 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'cms/login.html', {'form': form})
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            logout(request)  # Log out the current user
+        return super().dispatch(request, *args, **kwargs)
+
 
 
 #for dates

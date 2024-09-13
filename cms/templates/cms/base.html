@@ -1,5 +1,3 @@
-{% load bootstrap5 %}
-{% bootstrap_css %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -40,6 +38,7 @@
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
   {% block head %}{% endblock head %}
+  {{ form.media.css }}
 </head>
 
 <body>
@@ -239,15 +238,17 @@
               <hr class="dropdown-divider">
             </li>
 
+            {% if user.is_staff %}
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <a class="dropdown-item d-flex align-items-center" href="{% url "admin:index" %}">
                 <i class="bi bi-gear"></i>
-                <span>Account Settings</span>
+                <span>Admin Dashboard</span>
               </a>
             </li>
             <li>
               <hr class="dropdown-divider">
             </li>
+            {% endif %}
 
             <li>
               <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
@@ -260,7 +261,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="{% url "Login" %}">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -280,22 +281,29 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
+        <a class="nav-link collapsed" href={% url "Dashboard" %}>
+          <i class="bi bi-house"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Patient Data Nav -->
+
+      <li class="nav-item">
         <a class="nav-link collapsed" href={% url "Patient Data" %}>
-          <i class="bi bi-people"></i> <!-- More fitting for patient data -->
+          <i class="bi bi-people"></i>
           <span>Patient Data</span>
         </a>
       </li><!-- End Patient Data Nav -->
       
       <li class="nav-item">
         <a class="nav-link collapsed" href={% url "Inventory Data" %}>
-          <i class="bi bi-box-seam"></i> <!-- Icon representing a box for inventory -->
+          <i class="bi bi-box-seam"></i>
           <span>Inventory</span>
         </a>
       </li><!-- End Inventory Nav -->
       
       <li class="nav-item">
         <a class="nav-link collapsed" href={% url "chart" %}>
-          <i class="bi bi-bar-chart-line"></i> <!-- Icon representing data analytics -->
+          <i class="bi bi-bar-chart-line"></i>
           <span>Data Analytics</span>
         </a>
       </li><!-- End Data Analytics Nav -->
@@ -304,21 +312,21 @@
       
       <li class="nav-item">
         <a class="nav-link collapsed" href={% url "Medcert Data" %}>
-          <i class="bi bi-file-earmark-text"></i> <!-- Icon for document/logbook -->
+          <i class="bi bi-file-earmark-text"></i>
           <span>Medical Certificate Logbook</span>
         </a>
       </li><!-- End Medical Certificate Logbook Nav -->
       
       <li class="nav-item">
         <a class="nav-link collapsed" href={% url "Referral Data" %}>
-          <i class="bi bi-journal-medical"></i> <!-- Icon for medical referral -->
+          <i class="bi bi-journal-medical"></i>
           <span>Hospital Referral Logbook</span>
         </a>
       </li><!-- End Hospital Referral Logbook Nav -->
       
       <li class="nav-item">
         <a class="nav-link collapsed" href={% url "Treatment Data" %}>
-          <i class="bi bi-heart-pulse"></i> <!-- Icon for treatment/medical logs -->
+          <i class="bi bi-heart-pulse"></i>
           <span>Treatment Logbook</span>
         </a>
       </li><!-- End Treatment Logbook Nav -->
