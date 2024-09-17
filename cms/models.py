@@ -2,14 +2,9 @@ from django.db import models
 from django.utils import timezone
 
 
-class AutoDateTimeField(models.DateTimeField):
-    def pre_save(self, model_instance, add):
-        return timezone.now()
-
-
-
 class patient(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     unique_number = models.CharField(unique=True, max_length=10)
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100, blank=True)
@@ -40,10 +35,20 @@ class patient(models.Model):
 
 class Medicine(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     brand_name = models.CharField(max_length=100)
     generic_name = models.CharField(max_length=100)
     dosage_form = models.CharField(max_length=100)
     dosage_strength = models.CharField(max_length=100)
+    provider = models.CharField(max_length=100, blank=True, null=True)
+    provider_updated = models.CharField(max_length=100, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.provider == None:
+            self.provider = self.user.username
+        if self.provider_updated:
+            self.provider_updated = self.user.username
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.brand_name} ({self.generic_name})'
@@ -52,6 +57,7 @@ class Medicine(models.Model):
 
 class Stock(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     medicine = models.ForeignKey("Medicine", on_delete=models.RESTRICT)
     stock_quantity = models.PositiveIntegerField(default=0)
     choices = [
@@ -64,6 +70,7 @@ class Stock(models.Model):
     initial_stocks = models.PositiveIntegerField(blank=True, null=True)
     current_stock = models.PositiveIntegerField(blank=True, null=True)
     provider = models.CharField(max_length=100, blank=True, null=True)
+    provider_updated = models.CharField(max_length=100, blank=True)
 
     def save(self, *args, **kwargs):
         if self.provider == None:
@@ -71,6 +78,8 @@ class Stock(models.Model):
         if self.pk is None:
             self.initial_stocks = self.stock_quantity * self.quantity_per_unit
             self.current_stock = self.initial_stocks
+        if self.provider_updated:
+            self.provider_updated = self.user.username
         return super().save(*args, **kwargs)
 
     def __str__(self):
@@ -81,15 +90,19 @@ class Stock(models.Model):
 #logbooks
 class Medicalcertificate_logbook(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     unique_number = models.ForeignKey('Patient', on_delete=models.RESTRICT)
     purpose = models.CharField(max_length=100)
     note = models.CharField(max_length=1000, null=True, blank=True)
     received = models.BooleanField()
     provider = models.CharField(max_length=100, blank=True)
+    provider_updated = models.CharField(max_length=100, blank=True)
     
     def save(self, *args, **kwargs):
         if self.provider == None:
             self.provider = self.user.username
+        if self.provider_updated:
+            self.provider_updated = self.user.username
         return super().save(*args, **kwargs)
 
     def __str__(self):
@@ -99,13 +112,17 @@ class Medicalcertificate_logbook(models.Model):
 
 class Treatment_logbook(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     unique_number = models.ForeignKey('Patient', on_delete=models.RESTRICT)
     description = models.CharField(max_length=1000)
     provider = models.CharField(max_length=100)
+    provider_updated = models.CharField(max_length=100, blank=True)
 
     def save(self, *args, **kwargs):
         if self.provider == None:
             self.provider = self.user.username
+        if self.provider_updated:
+            self.provider_updated = self.user.username
         return super().save(*args, **kwargs)
 
     def __str__(self):
@@ -115,6 +132,7 @@ class Treatment_logbook(models.Model):
 
 class Referral(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     unique_number = models.ForeignKey('Patient', on_delete=models.RESTRICT)
     description = models.CharField(max_length=1000, null=True, blank=True)
     HOSPITAL_CHOICES = [
@@ -129,11 +147,13 @@ class Referral(models.Model):
     ]
     referred_hospital = models.CharField(max_length=100, choices=HOSPITAL_CHOICES)
     provider = models.CharField(max_length=100, blank=True)
+    provider_updated = models.CharField(max_length=100, blank=True)
 
     def save(self, *args, **kwargs):
         if self.provider == None:
             self.provider = self.user.username
-            print(self.provider)
+        if self.provider_updated:
+            self.provider_updated = self.user.username
         return super().save(*args, **kwargs)
 
     def __str__(self):
@@ -143,12 +163,14 @@ class Referral(models.Model):
 
 #for treatment logbook
 class Prescription(models.Model):
-    created_at = models.DateTimeField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     treatment_logbook = models.ForeignKey('Treatment_logbook', on_delete=models.CASCADE, related_name='prescriptions')
     medicine = models.ForeignKey('Stock', on_delete=models.RESTRICT)
     quantity_prescribed = models.PositiveIntegerField(default=1)
     description = models.CharField(max_length=1000, null=True, blank=True)
     provider = models.CharField(max_length=100, blank=True)
+    provider_updated = models.CharField(max_length=100, blank=True)
 
     def save(self, *args, **kwargs):
         if self.provider == None:
@@ -158,6 +180,8 @@ class Prescription(models.Model):
             self.medicine.save()
         else:
             raise ValueError(f"Not enough stock for {self.medicine.medicine.brand_name}")
+        if self.provider_updated:
+            self.provider_updated = self.user.username
         return super().save(*args, **kwargs)
     
     def delete(self, *args, **kwargs):

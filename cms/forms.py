@@ -8,7 +8,7 @@ class PatientForm(forms.ModelForm):
     class Meta:
         model = patient
         fields = '__all__'
-        exclude = ('created_at',)
+        exclude = ('created_at', 'provider', 'updated_at', 'provider_updated')
         widgets = {
             'unique_number': forms.TextInput(attrs={'class': 'form-control'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -32,7 +32,7 @@ class MedcertForm(forms.ModelForm):
     class Meta:
         model = Medicalcertificate_logbook
         fields = '__all__'
-        exclude = ('created_at', 'provider')
+        exclude = ('created_at', 'provider', 'updated_at', 'provider_updated')
         widgets = {
             'unique_number': s2forms.Select2Widget(attrs={'class': 'form-select'}), 
             'purpose': forms.TextInput(attrs={'class': 'form-control'}),
@@ -46,7 +46,7 @@ class ReferralForm(forms.ModelForm):
     class Meta:
         model = Referral
         fields = '__all__'
-        exclude = ('created_at', 'provider')
+        exclude = ('created_at', 'provider', 'updated_at', 'provider_updated')
         widgets = {
             'unique_number': s2forms.Select2Widget(attrs={'class': 'form-select'}),
             'description': forms.TextInput(attrs={'class': 'form-control'}),
@@ -59,7 +59,7 @@ class TreatmentForm(forms.ModelForm):
     class Meta:
         model = Treatment_logbook
         fields = '__all__'
-        exclude = ('created_at', 'provider')
+        exclude = ('created_at', 'provider', 'updated_at', 'provider_updated')
         widgets = {
             'unique_number': s2forms.Select2Widget(attrs={'class': 'form-select'}),
             'description': forms.TextInput(attrs={'class': 'form-control'}),
@@ -71,7 +71,7 @@ class MedicineForm(forms.ModelForm):
     class Meta:
         model = Medicine
         fields = '__all__'
-        exclude = ('created_at', 'provider')
+        exclude = ('created_at', 'provider', 'updated_at', 'provider_updated')
         widgets = {
             'brand_name': forms.TextInput(attrs={'class': 'form-control'}),
             'generic_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -85,7 +85,7 @@ class InventoryForm(forms.ModelForm):
     class Meta:
         model = Stock
         fields = '__all__'
-        exclude = ('created_at', 'initial_stocks', 'current_stock', 'provider')
+        exclude = ('created_at', 'initial_stocks', 'current_stock', 'provider', 'updated_at', 'provider_updated')
         widgets = {
             'medicine': s2forms.Select2Widget(attrs={'class': 'form-select'}),
             'stock_quantity': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -100,7 +100,7 @@ class PrescriptionForm(forms.ModelForm):
     class Meta:
         model = Prescription
         fields = '__all__'
-        exclude = ('provider',)
+        exclude = ('provider', 'updated_at', 'provider_updated')
         widgets = {
             'expiration_date': forms.DateInput(attrs={'class': 'form-control'}),
             'treatment_logbook': s2forms.Select2Widget(attrs={'class': 'form-select'}),

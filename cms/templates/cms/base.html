@@ -55,7 +55,7 @@
     </div><!-- End Logo -->
 
     <div class="search-bar">
-      <form class="search-form d-flex align-items-center mt-3" method="POST" action="#">
+      <form class="search-form d-flex align-items-center" method="POST" action="#">
         {% csrf_token %}
         <input type="text" name="query" placeholder="Search" title="Enter search keyword">
         <button type="submit" title="Search"><i class="bi bi-search"></i></button>
@@ -367,6 +367,10 @@
   <script src="{% static "cms/assets/vendor/simple-datatables/simple-datatables.js" %}"></script>
   <script src="{% static "cms/assets/vendor/tinymce/tinymce.min.js" %}"></script>
   <script src="{% static "cms/assets/vendor/php-email-form/validate.js" %}"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
+
 
   <!-- Template Main JS File -->
   <script src="{% static "cms/assets/js/main.js" %}"></script>

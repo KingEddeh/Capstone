@@ -1,16 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login
+import csv
 from .models import *
 from .forms import *
 from .filters import *
-import csv
-from django.http import HttpResponse
-import plotly.express as px
-from django.db.models.functions import ExtractMonth, ExtractYear
-from django.utils import timezone
-from datetime import timedelta
+
+from django.db.models import Count, DateTimeField
+from django.db.models.functions import TruncHour, TruncDay, TruncMonth, TruncYear
+from django.utils.timezone import localtime
+from collections import defaultdict
+from django.utils.timezone import localtime, is_naive, make_aware
+
 
 
 def login_view(request):
@@ -36,35 +39,32 @@ def login_view(request):
         return super().dispatch(request, *args, **kwargs)
 
 
-
-#for dates
-today = timezone.now().date()
-start_of_week = today - timedelta(days=today.weekday())  # Monday
-end_of_week = start_of_week + timedelta(days=6)          # Sunday
-
-
 @login_required(login_url="Login")
 def dashboard_view(request):
 
-    #patient statistic 1:
-    patient_filter_type = request.GET.get('patient_filter')
+    # for dates
+    today = timezone.now().date()
+
+    # PATIENT CARD---------------------------------------------------
+
+    # statistic 1:
     number_of_patients = patient.objects.all().count()
 
-
-
-
-
-    #patient statistic 2:
+    # statistic 2:
     treatment_count = Treatment_logbook.objects.filter(created_at__date=today).count()
     referral_count = Referral.objects.filter(created_at__date=today).count()
     medical_certificate_count = Medicalcertificate_logbook.objects.filter(created_at__date=today).count()
     total_records_today = treatment_count + referral_count + medical_certificate_count
 
-    context = {
-        'number_of_patients':number_of_patients,
-        'total_records_today':total_records_today
-        }
+    # Patient Visit Chart-------------------------------------------
 
+    
+
+    context = {
+        'number_of_patients': number_of_patients,
+        'total_records_today': total_records_today,
+    }
+    
     return render(request, 'cms/MainMenu.html', context)
 
 
@@ -531,7 +531,7 @@ def medicineform_export_view(request):
     writer = csv.writer(response)
 
     field_names = [
-        field.name for field in Treatment_logbook._meta.get_fields() 
+        field.name for field in Medicine._meta.get_fields() 
         if not field.is_relation or field.many_to_one
         ]
     writer.writerow(field_names)
@@ -621,60 +621,50 @@ def prescriptionform_export_view(request):
     return response
 
 def chart_view(request):
-    # Get selected medicines and years from the request (via GET method)
-    selected_medicines = request.GET.getlist('medicines')
-    selected_years = request.GET.getlist('years')
+    
+    return render(request, 'cms/chart.html')
 
-    # Query data only if medicines and years are selected
-    if selected_medicines and selected_years:
-        # Filter prescriptions by selected medicines and years, then group by month and year
-        data = (Prescription.objects
-                .filter(
-                    medicine__in=selected_medicines,
-                    created_at__year__in=selected_years
-                )
-                .annotate(
-                    month=ExtractMonth('created_at'),
-                    year=ExtractYear('created_at'),
-                    medicine_name=F('medicine__medicine__brand_name')  # Accessing brand_name through Stock and Medicine
-                )
-                .values(
-                    'month', 'year', 'medicine_name'
-                )
-                .annotate(
-                    total_quantity=Sum('quantity_prescribed')
-                )
-                .order_by('year', 'month'))
 
-        # Prepare data for Plotly
-        months = [item['month'] for item in data]
-        years = [f"{item['medicine_name']} ({item['year']})" for item in data]
-        quantities = [item['total_quantity'] for item in data]
+#API==================================================================================================
+#for Patient visits
+def get_logbook_data(request):
+    # Combine all three logbooks, truncating to the specified group
+    medical_certificates = Medicalcertificate_logbook.objects.annotate(
+        timestamp=TruncHour('created_at')
+    ).values('timestamp').annotate(count=Count('id')).order_by('timestamp')
+   
+    treatments = Treatment_logbook.objects.annotate(
+        timestamp=TruncHour('created_at')
+    ).values('timestamp').annotate(count=Count('id')).order_by('timestamp')
+   
+    referrals = Referral.objects.annotate(
+        timestamp=TruncHour('created_at')
+    ).values('timestamp').annotate(count=Count('id')).order_by('timestamp')
+   
+    # Combine all data
+    combined_data = list(medical_certificates) + list(treatments) + list(referrals)
+   
+    # Aggregate data by the specified group
+    grouped_data = defaultdict(lambda: {'count': 0})
+    for entry in combined_data:
+        utc_time = entry['timestamp']
+       
+        # Ensure the timestamp is aware (UTC) before converting
+        if is_naive(utc_time):
+            utc_time = make_aware(utc_time)
+       
+        local_time = localtime(utc_time)  # Convert UTC to local time
+       
+        formatted_time = local_time.isoformat()
+       
+        grouped_data[formatted_time]['count'] += entry['count']
+   
+    # Transform data for ApexCharts
+    series_data = {
+        'name': 'Records',
+        'data': [{'x': time, 'y': count['count']} for time, count in grouped_data.items()]
+    }
 
-        # Create Plotly chart with 12 months on the x-axis
-        fig = px.line(x=months, y=quantities, color=years, 
-                      title="Medicine Usage by Month",
-                      labels={'x': 'Month', 'y': 'Quantity Prescribed'})
-
-        # Set the x-axis labels to be the 12 months
-        fig.update_xaxes(tickmode='array', tickvals=list(range(1, 13)),
-                         ticktext=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
-
-        # Convert the Plotly figure to HTML
-        chart = fig.to_html(full_html=False)
-    else:
-        chart = None  # No data to display if nothing is selected
-
-    # Get all medicines and years for the selection form
-    medicines = Medicine.objects.values_list('id', 'brand_name').distinct()
-    years = Prescription.objects.annotate(year=ExtractYear('created_at')).values_list('year', flat=True).distinct()
-
-    # Render the template with the chart and form data
-    return render(request, 'cms/chart.html', {
-        'chart': chart,
-        'medicines': medicines,
-        'years': years,
-    })
+    return JsonResponse([series_data], safe=False)
 
 

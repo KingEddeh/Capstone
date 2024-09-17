@@ -8,130 +8,115 @@
 
 <section class="section dashboard">
     <div class="row">
-        
-        <!-- left side column -->
-        <div class="col-lg-8">
-            <div class="row">
 
-                <!-- Patient Card -->
-                <div class="col-xxl-4 col-sm-6">
-                    <div class="card info-card sales-card">
-        
-                        <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <li class="dropdown-header text-start">
-                            <h6>Filter</h6>
-                            </li>
-        
-                            <li><a class="dropdown-item" href="#">Today</a></li>
-                            <li><a class="dropdown-item" href="#">This Month</a></li>
-                            <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                        </div>
-        
-                        <div class="card-body">
-                        <h5 class="card-title">Patient <span>| Overview</span></h5>
-                        
-                        <!-- statistic 1 - total patients -->
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                            <i class="bi bi-person"></i>
-                            </div>
-                            <div class="ps-3">
-                            <h6>{{number_of_patients}}</h6>
-                            <span class="text-muted small pt-2 ps-1">Total Patients</span>
-                            </div>
-                        </div>
+        <!-- Patient Card -->
+        <div class="col-md">
+            <div class="card info-card sales-card">
 
-                        <!-- statistic 2 - new logbook records today -->
-                        <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="bi bi-journal"></i>
-                            </div>
-                            <div class="ps-3">
-                                <h6>{{total_records_today}}</h6>
-                                <span class="text-muted small pt-2 ps-1">Today's Logbook Entries</span>
-                            </div>
-                        </div>
+                <div class="filter">
+                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                    <h6>Filter</h6>
+                    </li>
 
-                        </div>
-                    </div><!-- End Patient Card -->
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                </ul>
+                </div>
+
+                <div class="card-body">
+                <h5 class="card-title">Patient <span>| Overview</span></h5>
                 
+                <!-- statistic 1 - total patients -->
+                <div class="d-flex align-items-center mb-3">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-person"></i>
+                    </div>
+                    <div class="ps-3">
+                    <h6>{{number_of_patients}}</h6>
+                    <span class="text-muted small pt-2 ps-1">Total Patients</span>
+                    </div>
                 </div>
 
-                <!-- Stock Card -->
-                <div class="col-xxl-4 col-sm-6">
-                    <div class="card info-card sales-card">
-        
-                        <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <li class="dropdown-header text-start">
-                            <h6>Filter</h6>
-                            </li>
-        
-                            <li><a class="dropdown-item" href="#">Today</a></li>
-                            <li><a class="dropdown-item" href="#">This Month</a></li>
-                            <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                        </div>
-        
-                        <div class="card-body">
-                        <h5 class="card-title">Stock <span>| Overview</span></h5>
-                        
-                        <!-- statistic 1 - total patients -->
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                            <i class="bi bi-person"></i>
-                            </div>
-                            <div class="ps-3">
-                            <h6>{{number_of_patients}}</h6>
-                            <span class="text-muted small pt-2 ps-1">Total Patients</span>
-                            </div>
-                        </div>
-
-                        <!-- statistic 2 - new logbook records today -->
-                        <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="bi bi-journal"></i>
-                            </div>
-                            <div class="ps-3">
-                                <h6>{{total_records_today}}</h6>
-                                <span class="text-muted small pt-2 ps-1">Today's Logbook Entries</span>
-                            </div>
-                        </div>
-
-                        </div>
-                    </div><!-- End Stock Card -->
-
+                <!-- statistic 2 - new logbook records today -->
+                <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-journal"></i>
+                    </div>
+                    <div class="ps-3">
+                        <h6>{{total_records_today}}</h6>
+                        <span class="text-muted small pt-2 ps-1">Patient Visits Today</span>
+                    </div>
                 </div>
 
-            </div>
+                <a class="btn btn-success m-3 btn-block" href= {% url "Patient Add" %}>
+                    Add Patient
+                </a>
+                <a class="btn btn-success m-3 btn-block" href= {% url "Medcert Add" %}>
+                    Add Medical Certificate Record
+                </a>
 
-            <div class="row">
-                <a class="btn btn-primary m-3 btn-block" href= {% url "Patient Data" %}>
-                    Patient Data
-                </a>
-                <a class="btn btn-primary m-3 btn-block" href= {% url "Medcert Data" %}>
-                    Medical Certificate Logbook
-                </a>
-                <a class="btn btn-primary m-3 btn-block" href= {% url "Referral Data" %}>
-                    Referral Logbook
-                </a>
-                <a class="btn btn-primary m-3 btn-block" href= {% url "Treatment Data" %}>
-                    Treatment Logbook
-                </a>
-                <a class="btn btn-primary m-3 btn-block" href= {% url "Inventory Data" %}>
-                    Inventory
-                </a>
-                <a class="btn btn-primary m-3 btn-block" href= {% url "chart" %}>
-                    Data Analytics
-                </a>
-            </div>
+                </div>
+            </div><!-- End Patient Card -->
+        
+        </div>
+
+        <!-- Stock Card -->
+        <div class="col-md">
+            <div class="card info-card sales-card">
+
+                <div class="filter">
+                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                    <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                </ul>
+                </div>
+
+                <div class="card-body">
+                <h5 class="card-title">Stock <span>| Overview</span></h5>
+                
+                <!-- statistic 1 - top 1 least amount of stock -->
+                <div class="d-flex align-items-center mb-3">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-1-circle"></i>
+                    </div>
+                    <div class="ps-3">
+                    <h6>Medicine name 1</h6>
+                    <span class="text-muted small pt-2 ps-1">Medicine stock amount</span>
+                    </div>
+                </div>
+
+                <!-- statistic 2 - new logbook records today -->
+                <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-journal"></i>
+                    </div>
+                    <div class="ps-3">
+                        <h6>{{total_records_today}}</h6>
+                        <span class="text-muted small pt-2 ps-1">Today's Logbook Entries</span>
+                    </div>
+                </div>
+
+                </div>
+            </div><!-- End Stock Card -->
 
         </div>
-        <!-- end left side column -->
+
     </div>
+
+    <div class="row">
+
+
+
+    </div>
+
 </div>
 {% endblock content %}
