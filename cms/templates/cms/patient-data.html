@@ -22,24 +22,26 @@
                 <hr>
                 <div class="table-responsive">
                     <table class="table datatable">
+                    <table class="table datatable">
                         <thead>
                             <tr>
-                                <th>ID Number</th>
-                                <th>Name</th>
-                                <th>Contact Number</th>
-                                <th>Sex</th>
-                                <th>Address</th>
-                                <th>Actions</th>
+                                <th class="table-primary">ID Number</th>
+                                <th class="table-primary">Name</th>
+                                <th class="table-primary">Contact Number</th>
+                                <th class="table-primary">Sex</th>
+                                <th class="table-primary">Address</th>
+                                <th class="table-primary">Actions</th>
+                                <th class="table-primary"></th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for patient in patients %}
                             <tr>
-                                <td>{{patient.unique_number}}</td>
-                                <td>{{patient.first_name}} {{patient.middle_name}} {{patient.last_name}} {{patient.suffix}}</th>
-                                <td>{{patient.contact_number}}</td>
-                                <td>{{patient.sex}}</td>
-                                <td>{{patient.address}}</td>
+                                <td>{{Stock}}</td>
+                                <td>{{Stock.medicine.brand_name}}</td>
+                                <td>{{Stock.initial_stocks}}</td>
+                                <td>{{Stock.current_stock}}</td>
+                                <td>{{Stock.expiration_date}}</td>
                                 <td>
                                     <a href="{% url 'Patient Update' patient.id %}">
                                         <button class="btn btn-primary" type="button">Update</button>
@@ -49,6 +51,7 @@
                                     </a>
                                 </td>
                             </tr>
+                            {% endfor %}
                             {% endfor %}
                         </tbody>
                     </table>
