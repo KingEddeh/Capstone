@@ -25,6 +25,8 @@ class patient(models.Model):
     contact_number = models.PositiveIntegerField(default=0)
     emergency_number = models.PositiveIntegerField(default=0)
     personal_email = models.CharField(max_length=100)
+    provider = models.CharField(max_length=100, blank=True)
+    provider_updated = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return f'{self.unique_number} ({self.last_name}, {self.first_name})'
@@ -42,13 +44,6 @@ class Medicine(models.Model):
     dosage_strength = models.CharField(max_length=100)
     provider = models.CharField(max_length=100, blank=True, null=True)
     provider_updated = models.CharField(max_length=100, blank=True)
-
-    def save(self, *args, **kwargs):
-        if self.provider == None:
-            self.provider = self.user.username
-        if self.provider_updated:
-            self.provider_updated = self.user.username
-        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.brand_name} ({self.generic_name})'
@@ -73,8 +68,6 @@ class Stock(models.Model):
     provider_updated = models.CharField(max_length=100, blank=True)
 
     def save(self, *args, **kwargs):
-        if self.provider == None:
-            self.provider = self.user.username
         if self.pk == None:
             self.initial_stocks = self.stock_quantity * self.quantity_per_unit
             self.current_stock = self.initial_stocks
@@ -82,8 +75,6 @@ class Stock(models.Model):
             consumed = self.initial_stocks - self.current_stock
             self.initial_stocks = self.stock_quantity * self.quantity_per_unit
             self.current_stock = self.initial_stocks - consumed
-        if self.provider_updated:
-            self.provider_updated = self.user.username
         return super().save(*args, **kwargs)
 
     def __str__(self):
@@ -102,14 +93,6 @@ class Medicalcertificate_logbook(models.Model):
     provider = models.CharField(max_length=100, blank=True)
     provider_updated = models.CharField(max_length=100, blank=True)
     
-    def save(self, *args, **kwargs):
-        if self.provider == None:
-            self.provider = self.user.username
-            self.provider_updated = self.user.username
-        if self.provider_updated:
-            self.provider_updated = self.user.username
-        return super().save(*args, **kwargs)
-
     def __str__(self):
         return f'Medical Certificate to {self.unique_number} by {self.provider}'
 
@@ -122,14 +105,6 @@ class Treatment_logbook(models.Model):
     description = models.CharField(max_length=1000)
     provider = models.CharField(max_length=100)
     provider_updated = models.CharField(max_length=100, blank=True)
-
-    def save(self, *args, **kwargs):
-        if self.provider == None:
-            self.provider = self.user.username
-            self.provider_updated = self.user.username
-        if self.provider_updated:
-            self.provider_updated = self.user.username
-        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f'Treatment {self.unique_number} by {self.provider}'
@@ -155,14 +130,6 @@ class Referral(models.Model):
     provider = models.CharField(max_length=100, blank=True)
     provider_updated = models.CharField(max_length=100, blank=True)
 
-    def save(self, *args, **kwargs):
-        if self.provider == None:
-            self.provider = self.user.username
-            self.provider_updated = self.user.username
-        if self.provider_updated:
-            self.provider_updated = self.user.username
-        return super().save(*args, **kwargs)
-
     def __str__(self):
         return f'Referral {self.unique_number} by {self.provider}'
 
@@ -180,16 +147,11 @@ class Prescription(models.Model):
     provider_updated = models.CharField(max_length=100, blank=True)
 
     def save(self, *args, **kwargs):
-        if self.provider == None:
-            self.provider = self.user.username
-            self.provider_updated = self.user.username
         if self.medicine.current_stock >= self.quantity_prescribed:
             self.medicine.current_stock -= self.quantity_prescribed
             self.medicine.save()
         else:
             raise ValueError(f"Not enough stock for {self.medicine.medicine.brand_name}")
-        if self.provider_updated:
-            self.provider_updated = self.user.username
         return super().save(*args, **kwargs)
     
     def delete(self, *args, **kwargs):

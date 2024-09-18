@@ -85,6 +85,11 @@ def patientform_add_view(request):
     if request.method == "POST":
         form = PatientForm(request.POST)
         if form.is_valid():
+            patient_instance = form.save(commit=False)
+            if not patient_instance.provider:
+                patient_instance.provider = request.user.username
+            patient_instance.provider_updated = request.user.username
+            patient_instance.save()
             form.save()
             return redirect('Patient Data')
 
@@ -100,6 +105,11 @@ def patientform_update_view(request, pk):
     if request.method == "POST":
         form = PatientForm(request.POST, instance=patient_instance)
         if form.is_valid():
+            patient_instance = form.save(commit=False)
+            patient_instance.provider_updated = request.user.username
+            if not patient_instance.provider:
+                patient_instance.provider = request.user.username
+            patient_instance.save()
             form.save()
             return redirect('Patient Data')
 
@@ -164,9 +174,10 @@ def medcertform_add_view(request):
     if request.method == "POST":
         form = MedcertForm(request.POST)
         if form.is_valid():
-            #add provider name to field from logged in user
             medcert_instance = form.save(commit=False)
-            medcert_instance.provider = request.user.username
+            medcert_instance.provider_updated = request.user.username
+            if not medcert_instance.provider:
+                medcert_instance.provider = request.user.username
             medcert_instance.save()
             return redirect('Medcert Data')
 
@@ -182,6 +193,10 @@ def medcertform_update_view(request, pk):
     if request.method == "POST":
         form = MedcertForm(request.POST, instance=referral_instance)
         if form.is_valid():
+            medcert_instance = form.save(commit=False)
+            medcert_instance.provider_updated = request.user.username
+            if not medcert_instance.provider:
+                medcert_instance.provider = request.user.username
             form.save()
             return redirect('Medcert Data')
 
@@ -245,7 +260,9 @@ def referralform_add_view(request):
         form = ReferralForm(request.POST)
         if form.is_valid():
             referral_instance = form.save(commit=False)
-            referral_instance.provider = request.user.username
+            referral_instance.provider_updated = request.user.username
+            if not referral_instance.provider:
+                referral_instance.provider = request.user.username
             referral_instance.save()
             return redirect('Referral Data')
 
@@ -261,6 +278,10 @@ def referralform_update_view(request, pk):
     if request.method == "POST":
         form = ReferralForm(request.POST, instance=referral_instance)
         if form.is_valid():
+            referral_instance = form.save(commit=False)
+            referral_instance.provider_updated = request.user.username
+            if not referral_instance.provider:
+                referral_instance.provider = request.user.username
             form.save()
             return redirect('Referral Data')
 
@@ -322,8 +343,10 @@ def treatmentform_add_view(request):
     if request.method == "POST":
         form = TreatmentForm(request.POST)
         if form.is_valid():
-            form = form.save(commit=False)
-            form.provider = request.user.username
+            treatment_instance = form.save(commit=False)
+            if not treatment_instance.provider:
+                treatment_instance.provider = request.user.username
+            treatment_instance.provider_updated = request.user.username
             form.save()
             return redirect('Treatment Data')
 
@@ -339,6 +362,10 @@ def treatmentform_update_view(request, pk):
     if request.method == "POST":
         form = TreatmentForm(request.POST, instance=treatment_instance)
         if form.is_valid():
+            treatment_instance = form.save(commit=False)
+            if not treatment_instance.provider:
+                treatment_instance.provider = request.user.username
+            treatment_instance.provider_updated = request.user.username
             form.save()
             return redirect('Treatment Data')
 
@@ -402,8 +429,10 @@ def inventoryform_add_view(request):
     if request.method == "POST":
         form = InventoryForm(request.POST)
         if form.is_valid():
-            form = form.save(commit=False)
-            form.provider = request.user.username
+            inventory_instance = form.save(commit=False)
+            if not inventory_instance.provider:
+                inventory_instance.provider = request.user.username
+            inventory_instance.provider_updated = request.user.username
             form.save()
             return redirect('Inventory Data')
 
@@ -419,6 +448,10 @@ def inventoryform_update_view(request, pk):
     if request.method == "POST":
         form = InventoryForm(request.POST, instance=inventory_instance)
         if form.is_valid():
+            inventory_instance = form.save(commit=False)
+            if not inventory_instance.provider:
+                inventory_instance.provider = request.user.username
+            inventory_instance.provider_updated = request.user.username
             form.save()
             return redirect('Inventory Data')
         
@@ -481,8 +514,10 @@ def medicineform_add_view(request):
     if request.method == "POST":
         form = MedicineForm(request.POST)
         if form.is_valid():
-            form = form.save(commit=False)
-            form.provider = request.user.username
+            medicine_instance = form.save(commit=False)
+            if not medicine_instance.provider:
+                medicine_instance.provider = request.user.username
+            medicine_instance.provider_updated = request.user.username
             form.save()
             return redirect('Medicine Data')
 
@@ -498,6 +533,10 @@ def medicineform_update_view(request, pk):
     if request.method == "POST":
         form = MedicineForm(request.POST, instance=medicine_instance)
         if form.is_valid():
+            medicine_instance = form.save(commit=False)
+            if not medicine_instance.provider:
+                medicine_instance.provider = request.user.username
+            medicine_instance.provider_updated = request.user.username
             form.save()
             return redirect('Medicine Data')
         
@@ -562,8 +601,10 @@ def prescriptionform_add_view(request):
     if request.method == "POST":
         form = PrescriptionForm(request.POST)
         if form.is_valid():
-            form = form.save(commit=False)
-            form.provider = request.user.username
+            prescription_instance = form.save(commit=False)
+            if not prescription_instance.provider:
+                prescription_instance.provider = request.user.username
+            prescription_instance.provider_updated = request.user.username
             form.save()
             return redirect('Treatment Data')
 
@@ -579,6 +620,10 @@ def prescriptionform_update_view(request, pk):
     if request.method == "POST":
         form = PrescriptionForm(request.POST, instance=prescription_instance)
         if form.is_valid():
+            prescription_instance = form.save(commit=False)
+            if not prescription_instance.provider:
+                prescription_instance.provider = request.user.username
+            prescription_instance.provider_updated = request.user.username
             form.save()
             return redirect('Treatment Data')
         
@@ -621,6 +666,7 @@ def prescriptionform_export_view(request):
     
     return response
 
+@login_required(login_url="Login")
 def chart_view(request):
     
     return render(request, 'cms/chart.html')
@@ -628,6 +674,7 @@ def chart_view(request):
 
 #API==================================================================================================
 #for Patient visits
+@login_required(login_url="Login")
 def get_logbook_data(request):
     # Combine all three logbooks, truncating to the specified group
     medical_certificates = Medicalcertificate_logbook.objects.annotate(
@@ -663,7 +710,7 @@ def get_logbook_data(request):
     # Transform data for ApexCharts
     series_data = {
         'name': 'Records',
-        'data': [{'x': time, 'y': count['count']} for time, count in grouped_data.items()]
+        'data': [{'x': time, 'y': count['count']} for time, count in sorted(grouped_data.items())]
     }
 
     return JsonResponse([series_data], safe=False)
