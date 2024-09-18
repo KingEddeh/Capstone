@@ -555,10 +555,12 @@ def medicineform_export_view(request):
 @login_required(login_url="Login")
 def prescriptiondata_view(request, fk):
 
+    p = get_object_or_404(Treatment_logbook, id=fk)
     myFilter = PrescriptionFilter(request.GET, queryset=Prescription.objects.filter(treatment_logbook__id=fk))
     records = myFilter.qs
 
-    context = {'records':records, 'myFilter':myFilter}
+
+    context = {'records':records, 'myFilter':myFilter, 'p':p}
 
     return render(request, 'cms/prescription-data.html', context)
 

@@ -87,7 +87,7 @@ class Stock(models.Model):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.medicine.brand_name} Stock #{self.id}'
+        return f'{self.medicine.brand_name} {self.medicine.dosage_strength} Stock #{self.id}'
 
 
 

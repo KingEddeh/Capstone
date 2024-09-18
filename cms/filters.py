@@ -132,7 +132,7 @@ class PrescriptionFilter(django_filters.FilterSet):
     class Meta:
         model = Prescription
         fields = '__all__'
-        exclude = 'unique_number, updated_at'
+        exclude = 'unique_number, updated_at, treatment_logbook'
 
     def get_queryset(self):
         #insert filters

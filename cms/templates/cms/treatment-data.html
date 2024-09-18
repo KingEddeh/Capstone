@@ -3,7 +3,15 @@
 {% block head %}{{ form.media.css }}{% endblock head %}
 {% block content %}
 <div class="container">
-
+    <div class="pagetitle">
+        <h1>Treatment Records</h1>
+        <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'Dashboard'%}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Treatment Records</li>
+            </ol>
+          </nav>
+    </div><!-- End Page Title -->
     <div class="row">
         <div class="col">
             <div class="card card-body">
@@ -11,12 +19,10 @@
                 <hr>
                 <div class="form-group">
                     <form method="GET">
-
                         {% csrf_token %}
-                        {{myFilter.form}}
+                        {{ myFilter.form }}
                         <br>
                         <input class="btn btn-primary btn-block" type="submit" value="Search">
-                        
                     </form>
                     <hr>
                     <form method="get" action="{% url 'Treatment Export' %}">
@@ -33,7 +39,7 @@
     <div class="row my-5">
         <div class="col">
             <div class="card card-body">
-                <a class="btn btn-success m-3 btn-block" href= {% url "Treatment Add" %}>
+                <a class="btn btn-success m-3 btn-block" href="{% url 'Treatment Add' %}">
                     Add Treatment Record
                 </a>
                 <hr>
@@ -42,18 +48,39 @@
                         <tr class="table-primary">
                             <th>Patient</th>
                             <th>Description</th>
+                            <th>Prescribed Medicines</th>
                             <th>Provider</th>
                             <th></th>
                         </tr>
                         {% for Treatment_logbook in records %}
                         <tr>
-                            <td>{{Treatment_logbook.unique_number}}</td>
-                            <td>{{Treatment_logbook.description}}</td>
-                            <td>{{Treatment_logbook.provider}}</td>
+                            <td>{{ Treatment_logbook.unique_number }}</td>
+                            <td>{{ Treatment_logbook.description }}</td>
                             <td>
-                                <a href="{% url "Prescription Data" Treatment_logbook.id %}"><button class="btn btn-success" type="button">Prescriptions</button></a>
-                                <a href="{% url "Treatment Update" Treatment_logbook.id %}"><button class="btn btn-primary" type="button">Update</button></a>
-                                <a href="{% url "Treatment Delete" Treatment_logbook.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
+                                <table class="table table-borderless">
+                                    {% for prescription in Treatment_logbook.prescriptions.all %}
+                                    <tr>
+                                        <td>{{ prescription.quantity_prescribed }}</td>
+                                        <td>{{ prescription.medicine.medicine.brand_name }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="2">No prescriptions</td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </td>
+                            <td>{{ Treatment_logbook.provider }}</td>
+                            <td>
+                                <a href="{% url 'Prescription Data' Treatment_logbook.id %}">
+                                    <button class="btn btn-success" type="button">Prescriptions</button>
+                                </a>
+                                <a href="{% url 'Treatment Update' Treatment_logbook.id %}">
+                                    <button class="btn btn-primary" type="button">Update</button>
+                                </a>
+                                <a href="{% url 'Treatment Delete' Treatment_logbook.id %}">
+                                    <button class="btn btn-danger" type="button">Delete</button>
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -68,4 +95,3 @@
 {{ form.media.js }}
 
 {% endblock content %}
-

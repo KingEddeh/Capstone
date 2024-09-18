@@ -3,6 +3,15 @@
 {% block head %}{{ form.media.css }}{% endblock head %}
 {% block content %}
 <div class="container">
+    <div class="pagetitle">
+        <h1>Inventory</h1>
+        <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'Dashboard'%}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Inventory</li>
+            </ol>
+          </nav>
+    </div><!-- End Page Title -->
     <div class="row">
         <div class="col">
             <div class="card card-body">
@@ -47,6 +56,7 @@
                 <div class="table-responsive">
                     <table class="table">
                         <tr class="table-primary">
+                            <th>Stock Name</th>
                             <th>Medicine</th>
                             <th>Initial Stock</th>
                             <th>Current Stock</th>
@@ -55,6 +65,7 @@
                         </tr>
                         {% for Stock in records %}
                         <tr>
+                            <td>{{Stock}}</td>
                             <td>{{Stock.medicine.brand_name}}</td>
                             <td>{{Stock.initial_stocks}}</td>
                             <td>{{Stock.current_stock}}</td>
