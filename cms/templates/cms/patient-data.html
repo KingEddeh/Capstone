@@ -2,35 +2,19 @@
 {% block title %}Patient Data{% endblock title %}
 {% block content %}
 <div class="container">
+    <div class="pagetitle">
+        <h1>Patient Data</h1>
+        <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'Dashboard'%}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Patient Data</li>
+            </ol>
+          </nav>
+    </div><!-- End Page Title -->
 
     <div class="row">
-        <div class="col">
-            <div class="card card-body">
-                <h2 class="card-title text-center">Search</h2>
-                <hr>
-                <div class="form-group">
-                    <form method="GET">
 
-                        {% csrf_token %}
-                        {{myFilter.form}}
-                        <br>
-                        <input class="btn btn-primary btn-block" type="submit" value="Search">
-                        
-                    </form>
-                    <hr>
-                    <form method="get" action="{% url 'Patient Export' %}">
-                        {% for key, value in request.GET.items %}
-                            <input type="hidden" name="{{ key }}" value="{{ value }}">
-                        {% endfor %}
-                        <button type="submit" class="btn btn-secondary">Export Filtered Results</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row my-5">
-        <div class="col-lg">
+        <div class="col-lg-9">
             <div class="card card-body table-responsive">
                 <a class="btn btn-success m-3 btn-block" href= {% url "Patient Add" %}>
                     Add Patient
@@ -63,6 +47,33 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-3">
+            <div class="card card-body">
+                <h2 class="card-title text-center">Search</h2>
+                <hr>
+                <div class="form-group">
+                    <form method="GET">
+
+                        {% csrf_token %}
+                        {{myFilter.form.as_p}}
+                        <br>
+                        <input class="btn btn-primary btn-block" type="submit" value="Search">
+                        
+                    </form>
+                    <hr>
+                    <form method="get" action="{% url 'Patient Export' %}">
+                        {% for key, value in request.GET.items %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endfor %}
+                        <button type="submit" class="btn btn-secondary">Export Filtered Results</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
+        
+</div>
 
 {% endblock content %}

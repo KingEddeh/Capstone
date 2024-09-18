@@ -388,19 +388,10 @@ def treatmentform_export_view(request):
 @login_required(login_url="Login")
 def inventorydata_view(request):
 
-    # Check if 'order_by' is in the request
-    order_by = request.GET.get('order_by', 'current_stock')  # Default to 'current_stock'
-    
-    # Adjust the queryset to order by 'current_stock' or 'expiration_date'
-    if order_by == 'expiration_date':
-        queryset = Stock.objects.all().order_by('expiration_date')
-    else:
-        queryset = Stock.objects.all().order_by('current_stock')
-
-    myFilter = InventoryFilter(request.GET, queryset=queryset)
+    myFilter = InventoryFilter(request.GET, queryset=Stock.objects.all())
     records = myFilter.qs
 
-    context = {'records': records, 'myFilter': myFilter, 'order_by': order_by}
+    context = {'records': records, 'myFilter': myFilter}
 
     return render(request, 'cms/inventory-data.html', context)
 

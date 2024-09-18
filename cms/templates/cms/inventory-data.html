@@ -13,15 +13,59 @@
           </nav>
     </div><!-- End Page Title -->
     <div class="row">
-        <div class="col">
+
+        <div class="col-lg-9">
             <div class="card card-body">
-                <h2 class="card-title text-center">Search</h2>
+                <div class="d-flexbox mt-2">
+                    <a class="btn btn-success m-2 btn-block" href= {% url "Inventory Add" %}>
+                        Add Inventory
+                    </a>
+                    <a class="btn btn-success m-2 btn-block" href= {% url "Medicine Data" %}>
+                        Add Medicine
+                    </a>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table datatable">
+                        <thead>
+                            <tr>
+                                <th class="table-primary">Stock Name</th>
+                                <th class="table-primary">Medicine</th>
+                                <th class="table-primary">Initial Stock</th>
+                                <th class="table-primary">Current Stock</th>
+                                <th class="table-primary">Expiration Date</th>
+                                <th class="table-primary"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for Stock in records %}
+                            <tr>
+                                <td>{{Stock}}</td>
+                                <td>{{Stock.medicine.brand_name}}</td>
+                                <td>{{Stock.initial_stocks}}</td>
+                                <td>{{Stock.current_stock}}</td>
+                                <td>{{Stock.expiration_date}}</td>
+                                <td>
+                                    <a href="{% url "Inventory Update" Stock.id %}"><button class="btn btn-primary" type="button">Update</button></a>
+                                    <a href="{% url "Inventory Delete" Stock.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="card card-body">
+                <h2 class="card-title text-center">Advanced Search</h2>
                 <hr>
                 <div class="form-group">
                     <form method="GET">
 
                         {% csrf_token %}
-                        {{myFilter.form}}
+                        {{myFilter.form.as_p}}
                         <br>
                         <input class="btn btn-primary btn-block" type="submit" value="Search">
                         
@@ -37,50 +81,8 @@
             </div>
         </div>
     </div>
-
-    <div class="row my-5">
-        <div class="col">
-            <div class="card card-body">
-                <div class="d-flexbox">
-                    <a class="btn btn-success m-3 btn-block" href= {% url "Inventory Add" %}>
-                        Add Inventory
-                    </a>
-                    <a class="btn btn-success m-3 btn-block" href= {% url "Medicine Data" %}>
-                        Add Medicine
-                    </a>
-                    <a href="?order_by=current_stock" class="btn btn-primary m-3">Sort by Stock Amount</a>
-                    <a href="?order_by=expiration_date" class="btn btn-secondary m-3">Sort by Expiration Date</a>
-                    
-                </div>
-                <hr>
-                <div class="table-responsive">
-                    <table class="table">
-                        <tr class="table-primary">
-                            <th>Stock Name</th>
-                            <th>Medicine</th>
-                            <th>Initial Stock</th>
-                            <th>Current Stock</th>
-                            <th>Expiration Date</th>
-                            <th></th>
-                        </tr>
-                        {% for Stock in records %}
-                        <tr>
-                            <td>{{Stock}}</td>
-                            <td>{{Stock.medicine.brand_name}}</td>
-                            <td>{{Stock.initial_stocks}}</td>
-                            <td>{{Stock.current_stock}}</td>
-                            <td>{{Stock.expiration_date}}</td>
-                            <td>
-                                <a href="{% url "Inventory Update" Stock.id %}"><button class="btn btn-primary" type="button">Update</button></a>
-                                <a href="{% url "Inventory Delete" Stock.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+        
+</div>
 
 <!--for select2 widget-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

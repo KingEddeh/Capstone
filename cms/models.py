@@ -15,7 +15,7 @@ class patient(models.Model):
         ("Female", "Female"),
     ]
     sex = models.CharField(max_length=6, choices=SEX_CHOICES)
-    age = models.PositiveIntegerField(default=0)
+    birthday = models.DateField(null=True)
     address = models.CharField(max_length=100)
     #for student only
     course = models.CharField(max_length=100, blank=True, null=True)
@@ -105,6 +105,7 @@ class Medicalcertificate_logbook(models.Model):
     def save(self, *args, **kwargs):
         if self.provider == None:
             self.provider = self.user.username
+            self.provider_updated = self.user.username
         if self.provider_updated:
             self.provider_updated = self.user.username
         return super().save(*args, **kwargs)
@@ -125,6 +126,7 @@ class Treatment_logbook(models.Model):
     def save(self, *args, **kwargs):
         if self.provider == None:
             self.provider = self.user.username
+            self.provider_updated = self.user.username
         if self.provider_updated:
             self.provider_updated = self.user.username
         return super().save(*args, **kwargs)
@@ -156,6 +158,7 @@ class Referral(models.Model):
     def save(self, *args, **kwargs):
         if self.provider == None:
             self.provider = self.user.username
+            self.provider_updated = self.user.username
         if self.provider_updated:
             self.provider_updated = self.user.username
         return super().save(*args, **kwargs)
@@ -179,6 +182,7 @@ class Prescription(models.Model):
     def save(self, *args, **kwargs):
         if self.provider == None:
             self.provider = self.user.username
+            self.provider_updated = self.user.username
         if self.medicine.current_stock >= self.quantity_prescribed:
             self.medicine.current_stock -= self.quantity_prescribed
             self.medicine.save()

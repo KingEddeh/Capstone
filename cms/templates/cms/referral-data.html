@@ -3,6 +3,7 @@
 {% block head %}{{ form.media.css }}{% endblock head %}
 {% block content %}
 <div class="container">
+
     <div class="pagetitle">
         <h1>Referral Records</h1>
         <nav>
@@ -12,34 +13,10 @@
             </ol>
           </nav>
     </div><!-- End Page Title -->
+
     <div class="row">
-        <div class="col">
-            <div class="card card-body">
-                <h2 class="card-title text-center">Search</h2>
-                <hr>
-                <div class="form-group">
-                    <form method="GET">
 
-                        {% csrf_token %}
-                        {{myFilter.form}}
-                        <br>
-                        <input class="btn btn-primary btn-block" type="submit" value="Search">
-                        
-                    </form>
-                    <hr>
-                    <form method="get" action="{% url 'Referral Export' %}">
-                        {% for key, value in request.GET.items %}
-                            <input type="hidden" name="{{ key }}" value="{{ value }}">
-                        {% endfor %}
-                        <button type="submit" class="btn btn-secondary">Export Filtered Results</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row my-5">
-        <div class="col">
+        <div class="col-lg-9">
             <div class="card card-body">
                 <a class="btn btn-success m-3 btn-block" href= {% url "Referral Add" %}>
                     Add Referral Record
@@ -70,10 +47,44 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-3">
+            <div class="card card-body">
+                <h2 class="card-title text-center">Search</h2>
+                <hr>
+                <div class="form-group">
+                    <form method="GET">
+
+                        {% csrf_token %}
+                        {{myFilter.form.as_p}}
+                        <br>
+                        <input class="btn btn-primary btn-block" type="submit" value="Search">
+                        
+                    </form>
+                    <hr>
+                    <form method="get" action="{% url 'Referral Export' %}">
+                        {% for key, value in request.GET.items %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endfor %}
+                        <button type="submit" class="btn btn-secondary">Export Filtered Results</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+</div>
 
 <!--for select2 widget-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.select2-widget').select2({
+            dropdownParent: $('.card-body')
+        });
+    });
+</script>
 {{ form.media.js }}
 
 {% endblock content %}
