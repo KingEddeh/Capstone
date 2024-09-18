@@ -75,9 +75,13 @@ class Stock(models.Model):
     def save(self, *args, **kwargs):
         if self.provider == None:
             self.provider = self.user.username
-        if self.pk is None:
+        if self.pk == None:
             self.initial_stocks = self.stock_quantity * self.quantity_per_unit
             self.current_stock = self.initial_stocks
+        if self.pk:
+            consumed = self.initial_stocks - self.current_stock
+            self.initial_stocks = self.stock_quantity * self.quantity_per_unit
+            self.current_stock = self.initial_stocks - consumed
         if self.provider_updated:
             self.provider_updated = self.user.username
         return super().save(*args, **kwargs)

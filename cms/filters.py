@@ -30,7 +30,7 @@ class MedcertFilter(django_filters.FilterSet):
     class Meta:
         model = Medicalcertificate_logbook
         fields = '__all__'
-        exclude = 'unique_number'
+        exclude = 'unique_number, updated_at'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -53,7 +53,7 @@ class ReferralFilter(django_filters.FilterSet):
     class Meta:
         model = Referral
         fields = '__all__'
-        exclude = 'unique_number'
+        exclude = 'unique_number, updated_at'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -76,7 +76,7 @@ class TreatmentFilter(django_filters.FilterSet):
     class Meta:
         model = Treatment_logbook
         fields = '__all__'
-        exclude = 'unique_number'
+        exclude = 'unique_number, updated_at'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -94,6 +94,7 @@ class MedicineFilter(django_filters.FilterSet):
     class Meta:
         model = Medicine
         fields = '__all__'
+        exclude = 'updated_at'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -109,12 +110,11 @@ class MedicineFilter(django_filters.FilterSet):
 class InventoryFilter(django_filters.FilterSet):
     medicine__brand_name = django_filters.CharFilter(label="Brand Name", lookup_expr='icontains')
     medicine__generic_name = django_filters.CharFilter(label="Generic Name", lookup_expr='icontains')
-    medicine__expiration_date = django_filters.DateFromToRangeFilter(label="Expiration Date", widget=RangeWidget(attrs={'placeholder': 'YYYY-MM-DD', 'type': 'date'}))
     created_at = django_filters.DateFromToRangeFilter(widget=RangeWidget(attrs={'placeholder': 'YYYY-MM-DD', 'type': 'date'}))
     class Meta:
         model = Stock
         fields = '__all__'
-        exclude = 'medicine'
+        exclude = 'medicine, updated_at, stock_quantity, quantity_per_unit, expiration_date'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -132,6 +132,7 @@ class PrescriptionFilter(django_filters.FilterSet):
     class Meta:
         model = Prescription
         fields = '__all__'
+        exclude = 'unique_number, updated_at'
 
     def get_queryset(self):
         #insert filters

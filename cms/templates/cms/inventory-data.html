@@ -3,9 +3,6 @@
 {% block head %}{{ form.media.css }}{% endblock head %}
 {% block content %}
 <div class="container">
-    <a class="btn btn-primary m-3 btn-block" href= {% url "Medicine Data" %}>
-        Medicine List
-    </a>
     <div class="row">
         <div class="col">
             <div class="card card-body">
@@ -35,9 +32,17 @@
     <div class="row my-5">
         <div class="col">
             <div class="card card-body">
-                <a class="btn btn-success m-3 btn-block" href= {% url "Inventory Add" %}>
-                    Add Inventory
-                </a>
+                <div class="d-flexbox">
+                    <a class="btn btn-success m-3 btn-block" href= {% url "Inventory Add" %}>
+                        Add Inventory
+                    </a>
+                    <a class="btn btn-success m-3 btn-block" href= {% url "Medicine Data" %}>
+                        Add Medicine
+                    </a>
+                    <a href="?order_by=current_stock" class="btn btn-primary m-3">Sort by Stock Amount</a>
+                    <a href="?order_by=expiration_date" class="btn btn-secondary m-3">Sort by Expiration Date</a>
+                    
+                </div>
                 <hr>
                 <div class="table-responsive">
                     <table class="table">

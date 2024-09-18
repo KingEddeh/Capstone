@@ -56,9 +56,8 @@ def dashboard_view(request):
     medical_certificate_count = Medicalcertificate_logbook.objects.filter(created_at__date=today).count()
     total_records_today = treatment_count + referral_count + medical_certificate_count
 
-    # Patient Visit Chart-------------------------------------------
+    # LOW STOCK CARD-------------------------------------------
 
-    
 
     context = {
         'number_of_patients': number_of_patients,
@@ -389,10 +388,19 @@ def treatmentform_export_view(request):
 @login_required(login_url="Login")
 def inventorydata_view(request):
 
-    myFilter = InventoryFilter(request.GET, queryset=Stock.objects.all().order_by('expiration_date'))
+    # Check if 'order_by' is in the request
+    order_by = request.GET.get('order_by', 'current_stock')  # Default to 'current_stock'
+    
+    # Adjust the queryset to order by 'current_stock' or 'expiration_date'
+    if order_by == 'expiration_date':
+        queryset = Stock.objects.all().order_by('expiration_date')
+    else:
+        queryset = Stock.objects.all().order_by('current_stock')
+
+    myFilter = InventoryFilter(request.GET, queryset=queryset)
     records = myFilter.qs
 
-    context = {'records':records, 'myFilter':myFilter}
+    context = {'records': records, 'myFilter': myFilter, 'order_by': order_by}
 
     return render(request, 'cms/inventory-data.html', context)
 
