@@ -22,26 +22,37 @@
                 </a>
                 <hr>
                 <div class="table-responsive">
-                    <table class="table">
-                        <tr class="table-primary">
-                            <th>Brand Name</th>
-                            <th>Generic Name</th>
-                            <th>Dosage Form</th>
-                            <th>Dosage Strength</th>
-                            <th></th>
-                        </tr>
-                        {% for Medicine in records %}
-                        <tr>
-                            <td>{{Medicine.brand_name}}</td>
-                            <td>{{Medicine.generic_name}}</td>
-                            <td>{{Medicine.dosage_form}}</td>
-                            <td>{{Medicine.dosage_strength}}</td>
-                            <td>
-                                <a href="{% url "Medicine Update" Medicine.id %}"><button class="btn btn-primary" type="button">Update</button></a>
-                                <a href="{% url "Medicine Delete" Medicine.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
-                            </td>
-                        </tr>
-                        {% endfor %}
+                    <table id="example" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Brand Name</th>
+                                <th>Generic Name</th>
+                                <th>Dosage Form</th>
+                                <th>Dosage Strength</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{Medicine.brand_name}}</td>
+                                <td>{{Medicine.generic_name}}</td>
+                                <td>{{Medicine.dosage_form}}</td>
+                                <td>{{Medicine.dosage_strength}}</td>
+                                <td>
+                                    <a href="{% url "Medicine Update" Medicine.id %}"><button class="btn btn-primary" type="button">Update</button></a>
+                                    <a href="{% url "Medicine Delete" Medicine.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Brand Name</th>
+                                <th>Generic Name</th>
+                                <th>Dosage Form</th>
+                                <th>Dosage Strength</th>
+                                <th>Actions</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>

@@ -22,26 +22,37 @@
                 </a>
                 <hr>
                 <div class="table-responsive">
-                    <table class="table">
-                        <tr class="table-primary">
-                            <th>Treatment Record ID</th>
-                            <th>Medicine</th>
-                            <th>Quantity Prescribed</th>
-                            <th>Description</th>
-                            <th></th>
-                        </tr>
-                        {% for Prescription in records %}
-                        <tr>
-                            <td>{{Prescription.treatment_logbook}}</td>
-                            <td>{{Prescription.medicine}}</td>
-                            <td>{{Prescription.quantity_prescribed}}</td>
-                            <td>{{Prescription.description}}</td>
-                            <td>
-                                <a href="{% url "Prescription Update" Prescription.id %}"><button class="btn btn-primary" type="button">Update</button></a>
-                                <a href="{% url "Prescription Delete" Prescription.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
-                            </td>
-                        </tr>
-                        {% endfor %}
+                    <table id="example" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Treatment Record ID</th>
+                                <th>Medicine</th>
+                                <th>Quantity Prescribed</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{Prescription.treatment_logbook.id}}</td>
+                                <td>{{Prescription.medicine}}</td>
+                                <td>{{Prescription.quantity_prescribed}}</td>
+                                <td>{{Prescription.description}}</td>
+                                <td>
+                                    <a href="{% url "Prescription Update" Prescription.id %}"><button class="btn btn-primary" type="button">Update</button></a>
+                                    <a href="{% url "Prescription Delete" Prescription.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Medicine</th>
+                                <th>Initial Stock</th>
+                                <th>Current Stock</th>
+                                <th>Expiration Date</th>
+                                <th>Action</th> 
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
