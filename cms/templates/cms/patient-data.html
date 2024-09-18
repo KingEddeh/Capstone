@@ -15,13 +15,12 @@
     <div class="row">
 
         <div class="col-lg-9">
-            <div class="card card-body table-responsive">
+            <div class="card card-body">
                 <a class="btn btn-success m-3 btn-block" href= {% url "Patient Add" %}>
                     Add Patient
                 </a>
                 <hr>
                 <div class="table-responsive">
-                    <table class="table datatable">
                     <table class="table datatable">
                         <thead>
                             <tr>
@@ -31,17 +30,16 @@
                                 <th class="table-primary">Sex</th>
                                 <th class="table-primary">Address</th>
                                 <th class="table-primary">Actions</th>
-                                <th class="table-primary"></th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for patient in patients %}
                             <tr>
-                                <td>{{Stock}}</td>
-                                <td>{{Stock.medicine.brand_name}}</td>
-                                <td>{{Stock.initial_stocks}}</td>
-                                <td>{{Stock.current_stock}}</td>
-                                <td>{{Stock.expiration_date}}</td>
+                                <td>{{patient.unique_number}}</td>
+                                <td>{{patient.first_name}} {{patient.middle_name}} {{patient.last_name}} {{patient.suffix}}</th>
+                                <td>{{patient.contact_number}}</td>
+                                <td>{{patient.sex}}</td>
+                                <td>{{patient.address}}</td>
                                 <td>
                                     <a href="{% url 'Patient Update' patient.id %}">
                                         <button class="btn btn-primary" type="button">Update</button>
@@ -51,7 +49,6 @@
                                     </a>
                                 </td>
                             </tr>
-                            {% endfor %}
                             {% endfor %}
                         </tbody>
                     </table>

@@ -212,14 +212,12 @@
                                             format: 'MMM-dd-yyyy',
                                             datetimeUTC: false
                                         },
-                                        tickAmount: 6
                                     },
                                     yaxis: {
                                         title: {
                                             text: 'Records'
                                         },
                                         min: 1,
-                                        tickAmount: 2,
                                         forceNiceScale: true
                                     },
                                     tooltip: {
@@ -230,9 +228,6 @@
                                     dataLabels: {
                                         enabled: false
                                     },
-                                    markers: {
-                                        size: 5
-                                    }
                                 };
                                 chart = new ApexCharts(document.querySelector("#chart"), options);
                                 chart.render().then(() => {
