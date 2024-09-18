@@ -22,37 +22,33 @@
                 </a>
                 <hr>
                 <div class="table-responsive">
-                    <table id="example" class="table table-striped" style="width:100%">
+                    <table class="table datatable">
                         <thead>
                             <tr>
-                                <th>Brand Name</th>
-                                <th>Generic Name</th>
-                                <th>Dosage Form</th>
-                                <th>Dosage Strength</th>
-                                <th>Actions</th>
+                                <th class="table-primary">Brand Name</th>
+                                <th class="table-primary">Generic Name</th>
+                                <th class="table-primary">Dosage Form</th>
+                                <th class="table-primary">Dosage Strength</th>
+                                <th class="table-primary">Expiration Date</th>
+                                <th class="table-primary">Actions</th>
+                                <th class="table-primary"></th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for Stock in records %}
                             <tr>
                                 <td>{{Medicine.brand_name}}</td>
                                 <td>{{Medicine.generic_name}}</td>
+                                <td>{{Stock.initial_stocks}}</td>
                                 <td>{{Medicine.dosage_form}}</td>
                                 <td>{{Medicine.dosage_strength}}</td>
                                 <td>
-                                    <a href="{% url "Medicine Update" Medicine.id %}"><button class="btn btn-primary" type="button">Update</button></a>
-                                    <a href="{% url "Medicine Delete" Medicine.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
+                                    <a href="{% url "Inventory Update" Stock.id %}"><button class="btn btn-primary" type="button">Update</button></a>
+                                    <a href="{% url "Inventory Delete" Stock.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>Brand Name</th>
-                                <th>Generic Name</th>
-                                <th>Dosage Form</th>
-                                <th>Dosage Strength</th>
-                                <th>Actions</th>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
             </div>

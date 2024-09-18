@@ -23,37 +23,31 @@
                 </a>
                 <hr>
                 <div class="table-responsive">
-                    <table id="example" class="table table-striped" style="width:100%">
+                    <table class="table datatable">
                         <thead>
                             <tr>
-                                <th>Patient</th>
-                                <th>Purpose</th>
-                                <th>Referred Hospital</th>
-                                <th>Provider</th>
-                                <th>Actions</th>
+                                <th class="table-primary">Patient</th>
+                                <th class="table-primary">Purpose</th>
+                                <th class="table-primary">Referred Hospital</th>
+                                <th class="table-primary">Provider</th>
+                                <th class="table-primary">Actions</th>
+                                <th class="table-primary"></th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for Stock in records %}
                             <tr>
                                 <td>{{Referral.unique_number}}</td>
                                 <td>{{Referral.description}}</td>
                                 <td>{{Referral.referred_hospital}}</td>
                                 <td>{{Referral.provider}}</td>
                                 <td>
-                                    <a href="{% url "Referral Update" Referral.id %}"><button class="btn btn-primary" type="button">Update</button></a>
-                                    <a href="{% url "Referral Delete" Referral.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
+                                    <a href="{% url "Inventory Update" Stock.id %}"><button class="btn btn-primary" type="button">Update</button></a>
+                                    <a href="{% url "Inventory Delete" Stock.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>Medicine</th>
-                                <th>Initial Stock</th>
-                                <th>Current Stock</th>
-                                <th>Expiration Date</th>
-                                <th>Action</th> 
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
             </div>
