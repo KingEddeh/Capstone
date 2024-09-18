@@ -21,7 +21,7 @@
                 </a>
                 <hr>
                 <div class="table-responsive">
-                    <table id="example" class="table table-striped" style="width:100%">
+                    <table class="table datatable">
                         <thead>
                             <tr>
                                 <th>Patient</th>
@@ -33,50 +33,20 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for Medicalcertificate_logbook in records %}
                             <tr>
-                                <td>{{Medcert_logbook.unique_number}}</td>
-                                <td>{{Medcert_logbook.purpose}}</td>
-                                <td>{{Medcert_logbook.note}}</td>
-                                <td>{{Medcert_logbook.received}}</td>
-                                <td>{{Medcert_logbook.provider}}</td>
+                                <td>{{Medicalcertificate_logbook.unique_number}}</td>
+                                <td>{{Medicalcertificate_logbook.purpose}}</td>
+                                <td>{{Medicalcertificate_logbook.note}}</td>
+                                <td>{{Medicalcertificate_logbook.received}}</td>
+                                <td>{{Medicalcertificate_logbook.provider}}</td>
                                 <td>
                                     <a href="{% url "Medcert Update" Medicalcertificate_logbook.id %}"><button class="btn btn-primary" type="button">Update</button></a>
                                     <a href="{% url "Medcert Delete" Medicalcertificate_logbook.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>{{Medcert_logbook.unique_number}}</td>
-                                <td>{{Medcert_logbook.purpose}}</td>
-                                <td>{{Medcert_logbook.note}}</td>
-                                <td>{{Medcert_logbook.received}}</td>
-                                <td>{{Medcert_logbook.provider}}</td>
-                                <td>
-                                    <a href="{% url "Medcert Update" Medicalcertificate_logbook.id %}"><button class="btn btn-primary" type="button">Update</button></a>
-                                    <a href="{% url "Medcert Delete" Medicalcertificate_logbook.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{Medcert_logbook.unique_number}}</td>
-                                <td>{{Medcert_logbook.purpose}}</td>
-                                <td>{{Medcert_logbook.note}}</td>
-                                <td>{{Medcert_logbook.received}}</td>
-                                <td>{{Medcert_logbook.provider}}</td>
-                                <td>
-                                    <a href="{% url "Medcert Update" Medicalcertificate_logbook.id %}"><button class="btn btn-primary" type="button">Update</button></a>
-                                    <a href="{% url "Medcert Delete" Medicalcertificate_logbook.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>Patient</th>
-                                <th>Purpose</th> 
-                                <th>Note</th>
-                                <th>Received</th> 
-                                <th>Provider</th>
-                                <th>Actions</th>
-                            </tr>
-                        </tfoot>
+                            {% endfor %}
+                        </tbody>                            
                     </table>
                 </div>
             </div>

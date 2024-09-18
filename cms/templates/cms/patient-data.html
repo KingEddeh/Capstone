@@ -21,7 +21,7 @@
                 </a>
                 <hr>
                 <div class="table-responsive">
-                    <table id="example" class="table table-striped" style="width:100%">
+                    <table class="table datatable">
                         <thead>
                             <tr>
                                 <th>ID Number</th>
@@ -33,6 +33,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for patient in patients %}
                             <tr>
                                 <td>{{patient.unique_number}}</td>
                                 <td>{{patient.first_name}} {{patient.middle_name}} {{patient.last_name}} {{patient.suffix}}</th>
@@ -40,23 +41,16 @@
                                 <td>{{patient.sex}}</td>
                                 <td>{{patient.address}}</td>
                                 <td>
-                                    <a href="{% url 'Inventory Update' Stock.id %}">
+                                    <a href="{% url 'Patient Update' patient.id %}">
                                         <button class="btn btn-primary" type="button">Update</button>
                                     </a>
-                                    <a href="{% url 'Inventory Delete' Stock.id %}">
+                                    <a href="{% url 'Patient Delete' patient.id %}">
                                         <button class="btn btn-danger" type="button">Delete</button>
                                     </a>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
-                        <tfoot>
-                            <th>ID Number</th>
-                            <th>Name</th>
-                            <th>Contact Number</th>
-                            <th>Sex</th>
-                            <th>Address</th>
-                            <th>Actions</th>
-                        </tfoot>
                     </table>
                 </div>
             </div>

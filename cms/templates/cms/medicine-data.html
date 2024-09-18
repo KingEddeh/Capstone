@@ -22,7 +22,7 @@
                 </a>
                 <hr>
                 <div class="table-responsive">
-                    <table id="example" class="table table-striped" style="width:100%">
+                    <table class="table datatable">
                         <thead>
                             <tr>
                                 <th>Brand Name</th>
@@ -33,6 +33,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for Medicine in records %}
                             <tr>
                                 <td>{{Medicine.brand_name}}</td>
                                 <td>{{Medicine.generic_name}}</td>
@@ -43,16 +44,8 @@
                                     <a href="{% url "Medicine Delete" Medicine.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>Brand Name</th>
-                                <th>Generic Name</th>
-                                <th>Dosage Form</th>
-                                <th>Dosage Strength</th>
-                                <th>Actions</th>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
             </div>
