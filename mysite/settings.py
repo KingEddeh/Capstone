@@ -27,6 +27,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['dhvsu-cms.systems', 'www.dhvsu-cms.systems', '127.0.0.1:8000', '146.190.85.83', '127.0.0.1']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://dhvsu-cms.systems',
+    'https://www.dhvsu-cms.systems',
+]
+
 
 # Application definition
 
