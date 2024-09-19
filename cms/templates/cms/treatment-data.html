@@ -29,6 +29,7 @@
                             <tr>
                                 <th class="table-primary">Patient</th>
                                 <th class="table-primary">Description</th>
+                                <th class="table-primary">Prescription</th>
                                 <th class="table-primary">Provider</th>
                                 <th class="table-primary">Actions</th>
                             </tr>
@@ -38,10 +39,31 @@
                             <tr>
                                 <td>{{Treatment_logbook.unique_number}}</td>
                                 <td>{{Treatment_logbook.description}}</td>
+                                <td>
+                                    <table class="table table-borderless">
+                                        {% for prescription in Treatment_logbook.prescriptions.all %}
+                                        <tr>
+                                            <td>{{ prescription.quantity_prescribed }}</td>
+                                            <td>{{ prescription.medicine.medicine.brand_name }}</td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="2">No prescriptions</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
+                                </td>
                                 <td>{{Treatment_logbook.provider}}</td>
                                 <td>
-                                    <a href="{% url "Treatment Update" Treatment_logbook.id %}"><button class="btn btn-primary" type="button">Update</button></a>
-                                    <a href="{% url "Treatment Delete" Treatment_logbook.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
+                                    <a href="{% url 'Prescription Data' Treatment_logbook.id %}">
+                                        <button class="btn btn-success" type="button">Prescriptions</button>
+                                    </a>
+                                    <a href="{% url 'Treatment Update' Treatment_logbook.id %}">
+                                        <button class="btn btn-primary" type="button">Update</button>
+                                    </a>
+                                    <a href="{% url 'Treatment Delete' Treatment_logbook.id %}">
+                                        <button class="btn btn-danger" type="button">Delete</button>
+                                    </a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -55,7 +77,7 @@
         <!-- Search -->
         <div class="col-lg-3">
             <div class="card card-body">
-                <h2 class="card-title text-center">Search</h2>
+                <h2 class="card-title text-center">Advanced Search</h2>
                 <hr>
                 <div class="form-group">
                     <form method="GET">

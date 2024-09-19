@@ -9,238 +9,248 @@
 <section class="section dashboard">
     <div class="row">
 
-    <!-- Patient Card -->
-        <div class="col">
-            <div class="card info-card sales-card">
-
-                <div class="filter">
-                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                        <li class="dropdown-header text-start">
-                        <h6>Filter</h6>
-                        </li>
-
-                        <li><a class="dropdown-item" href="#">Today</a></li>
-                        <li><a class="dropdown-item" href="#">This Month</a></li>
-                        <li><a class="dropdown-item" href="#">This Year</a></li>
-                    </ul>
-                </div>
-
-                <div class="card-body">
-                <h5 class="card-title">Patient <span>| Overview</span></h5>
-                
-                <!-- statistic 1 - total patients -->
-                <div class="d-flex align-items-center mb-3">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-person"></i>
-                    </div>
-                    <div class="ps-3">
-                    <h6>{{number_of_patients}}</h6>
-                    <span class="text-muted small pt-2 ps-1">Patients Registered</span>
-                    </div>
-                </div>
-
-                <!-- statistic 2 - new logbook records today -->
-                <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="bi bi-journal"></i>
-                    </div>
-                    <div class="ps-3">
-                        <h6>{{total_records_today}}</h6>
-                        <span class="text-muted small pt-2 ps-1">Patient Visits Today</span>
-                    </div>
-                </div>
-
-                <a class="btn btn-success m-3 btn-block" href= {% url "Patient Add" %}>
-                    Add Patient
-                </a>
-                <a class="btn btn-success m-3 btn-block" href= {% url "Medcert Add" %}>
-                    Add Medical Certificate Record
-                </a>
-
-                </div>
-            </div><!-- End Patient Card -->
         
-        </div>
+        <div class="col-lg-8">
+            <div class="row">
 
-    <!-- Stock Card -->
-        <div class="col">
-            <div class="card info-card sales-card">
-
-                <div class="filter">
-                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                        <li class="dropdown-header text-start">
-                        <h6>Filter</h6>
-                        </li>
-
-                        <li><a class="dropdown-item" href="#">Today</a></li>
-                        <li><a class="dropdown-item" href="#">This Month</a></li>
-                        <li><a class="dropdown-item" href="#">This Year</a></li>
-                    </ul>
-                </div>
-
-                <div class="card-body">
-                <h5 class="card-title">Low Stock <span>| Overview</span></h5>
-                
-                <!-- statistic 1 - top 1 least amount of stock -->
-                <div class="d-flex align-items-center mb-3">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-1-circle"></i>
-                    </div>
-                    <div class="ps-3">
-                    <h6>Medicine name 1</h6>
-                    <span class="text-muted small pt-2 ps-1">Medicine stock amount</span>
-                    </div>
-                </div>
-
-                <!-- statistic 2 - new logbook records today -->
-                <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="bi bi-journal"></i>
-                    </div>
-                    <div class="ps-3">
-                        <h6>{{total_records_today}}</h6>
-                        <span class="text-muted small pt-2 ps-1">Today's Logbook Entries</span>
-                    </div>
-                </div>
-
-                </div>
-            </div><!-- End Stock Card -->
-
-        </div>
-
-    </div>
-
-    <div class="row">
-
-    <!-- Chart col -->
-        <div class="col-6">
-            <!-- Patient Visits -->
-            <div class="card card-body">
-                <h5 class="card-title">Patient Visits<span> | Drag to Zoom In</span></h5>
-                <div class="d-flex">
-                    <button id="hours-24" class="btn btn-primary me-2">24H</button>
-                    <button id="week-1" class="btn btn-primary me-2">7D</button>
-                    <button id="month-1" class="btn btn-primary me-2">1M</button>
-                    <button id="year-1" class="btn btn-primary">1Y</button>
-                </div>
-                <div id="chart"></div>
-                
-                <script>
-                    let chart;
-                    const now = new Date();
-                    let allTimeStart, allTimeEnd;
+                <div class="col-6"><!-- Patient Card -->
+                    <div class="card info-card sales-card">
+                    <div class="card-body">
+                    <h5 class="card-title">Patient <span>| Overview</span></h5>
                     
-                    function resetCssClasses(e) {
-                        const buttons = document.querySelectorAll('.btn-primary');
-                        buttons.forEach(btn => btn.classList.remove('active'));
-                        e.target.classList.add('active');
-                    }
+                    <!-- statistic 1 - total patients -->
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-person"></i>
+                        </div>
+                        <div class="ps-3">
+                            <h6>{{number_of_patients}}</h6>
+                            <span class="text-muted small pt-2 ps-1">Patients Registered</span>
+                        </div>
+                    </div>
 
-                    function setupEventListeners() {
-                        document.querySelector('#hours-24').addEventListener('click', function(e) {
-                            resetCssClasses(e);
-                            const end = new Date().getTime();
-                            const start = end - 24 * 60 * 60 * 1000;
-                            console.log('24 hours - start:', new Date(start), 'end:', new Date(end));
-                            chart.zoomX(start, end);
-                        });
+                    <!-- statistic 2 - new logbook records today -->
+                    <div class="d-flex align-items-center">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-journal"></i>
+                        </div>
+                        <div class="ps-3">
+                            <h6>{{total_records_today}}</h6>
+                            <span class="text-muted small pt-2 ps-1">Patient Visits Today</span>
+                        </div>
+                    </div>
+                    <a class="btn btn-success m-3 btn-block" href="{% url 'Patient Add' %}">
+                        Add Patient
+                    </a>
+                    </div>
+                    </div>
+                </div>
 
-                        document.querySelector('#week-1').addEventListener('click', function(e) {
-                            resetCssClasses(e);
-                            const end = new Date().getTime();
-                            const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7).setHours(0, 0, 0, 0);
-                            console.log('1 week - start:', new Date(start), 'end:', new Date(end));
-                            chart.zoomX(start, end);
-                        });
+                <div class="col-6">
+                    <div class="card info-card sales-card">
+                    <div class="card-body">
+                    <h5 class="card-title">Add Records<span> | Quick Access</span></h5>
+                    <a class="btn btn-success m-3 btn-block" href="{% url 'Medcert Add' %}">
+                        Add Medical Certificate Record
+                    </a>
+                    <a class="btn btn-success m-3 btn-block" href="{% url 'Referral Add' %}">
+                        Add Hospital Referral Record
+                    </a>
+                    <a class="btn btn-success m-3 btn-block" href="{% url 'Treatment Add' %}">
+                        Add Treatment Record
+                    </a>
+                    </div>
+                    </div>
+                </div>
 
-                        document.querySelector('#month-1').addEventListener('click', function(e) {
-                            resetCssClasses(e);
-                            const start = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-                            const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).getTime();
-                            console.log('1 month - start:', new Date(start), 'end:', new Date(end));
-                            chart.zoomX(start, end);
-                        });
+            </div>
 
-                        document.querySelector('#year-1').addEventListener('click', function(e) {
-                            resetCssClasses(e);
-                            const start = new Date(now.getFullYear(), 0, 1).getTime();
-                            const end = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999).getTime();
-                            console.log('1 year - start:', new Date(start), 'end:', new Date(end));
-                            chart.zoomX(start, end);
-                        });
+            <div class="row">
 
-                        document.querySelector('#all-time').addEventListener('click', function(e) {
-                            resetCssClasses(e);
-                            console.log('All time - start:', new Date(allTimeStart), 'end:', new Date(allTimeEnd));
-                            chart.zoomX(allTimeStart, allTimeEnd);
-                        });
-                    }
-
-                    document.addEventListener('DOMContentLoaded', function() {
-                        fetch(`/api/logbooks/`)
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log('Response data:', data);
-                                let seriesData = data[0];
-                                
-                                // Calculate all-time range
-                                allTimeStart = Math.min(...seriesData.data.map(point => point[0]));
-                                allTimeEnd = Math.max(...seriesData.data.map(point => point[0]));
-                                
-                                var options = {
-                                    series: [seriesData],
-                                    chart: {
-                                        type: 'line',
-                                        height: 350,
-                                        zoom: {
-                                            enabled: true,
-                                            type: 'x',
-                                            autoScaleYaxis: true
-                                        },
-                                        toolbar: {
-                                            autoSelected: 'zoom',
-                                            tools: {
-                                                reset: true
-                                            }
-                                        }
-                                    },
-                                    xaxis: {
-                                        type: 'datetime',
-                                        labels: {
-                                            format: 'MMM-dd-yyyy',
-                                            datetimeUTC: false
-                                        },
-                                    },
-                                    yaxis: {
-                                        title: {
-                                            text: 'Records'
-                                        },
-                                        min: 1,
-                                        forceNiceScale: true
-                                    },
-                                    tooltip: {
-                                        x: {
-                                            format: 'MMM-dd-yyyy HH:mm'
-                                        }
-                                    },
-                                    dataLabels: {
-                                        enabled: false
-                                    },
-                                };
-                                chart = new ApexCharts(document.querySelector("#chart"), options);
-                                chart.render().then(() => {
-                                    setupEventListeners();
+                <!-- Chart col -->
+                <div class="col">
+                    <!-- Patient Visits -->
+                    <div class="card card-body">
+                        <h5 class="card-title">Patient Visits<span> | Drag to Zoom In</span></h5>
+                        <div class="d-flex">
+                            <button id="hours-24" class="btn btn-primary me-2">24H</button>
+                            <button id="week-1" class="btn btn-primary me-2">7D</button>
+                            <button id="month-1" class="btn btn-primary me-2">1M</button>
+                            <button id="year-1" class="btn btn-primary">1Y</button>
+                        </div>
+                        <div id="chart"></div>
+                        
+                        <script>
+                            let chart;
+                            const now = new Date();
+                            let allTimeStart, allTimeEnd;
+                            
+                            function resetCssClasses(e) {
+                                const buttons = document.querySelectorAll('.btn-primary');
+                                buttons.forEach(btn => btn.classList.remove('active'));
+                                e.target.classList.add('active');
+                            }
+        
+                            function setupEventListeners() {
+                                document.querySelector('#hours-24').addEventListener('click', function(e) {
+                                    resetCssClasses(e);
+                                    const end = new Date().getTime();
+                                    const start = end - 24 * 60 * 60 * 1000;
+                                    console.log('24 hours - start:', new Date(start), 'end:', new Date(end));
+                                    chart.zoomX(start, end);
                                 });
-                            })
-                            .catch(error => console.error('Error fetching data:', error));
-                    });
-                </script>
+        
+                                document.querySelector('#week-1').addEventListener('click', function(e) {
+                                    resetCssClasses(e);
+                                    const end = new Date().getTime();
+                                    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7).setHours(0, 0, 0, 0);
+                                    console.log('1 week - start:', new Date(start), 'end:', new Date(end));
+                                    chart.zoomX(start, end);
+                                });
+        
+                                document.querySelector('#month-1').addEventListener('click', function(e) {
+                                    resetCssClasses(e);
+                                    const start = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+                                    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).getTime();
+                                    console.log('1 month - start:', new Date(start), 'end:', new Date(end));
+                                    chart.zoomX(start, end);
+                                });
+        
+                                document.querySelector('#year-1').addEventListener('click', function(e) {
+                                    resetCssClasses(e);
+                                    const start = new Date(now.getFullYear(), 0, 1).getTime();
+                                    const end = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999).getTime();
+                                    console.log('1 year - start:', new Date(start), 'end:', new Date(end));
+                                    chart.zoomX(start, end);
+                                });
+        
+                                document.querySelector('#all-time').addEventListener('click', function(e) {
+                                    resetCssClasses(e);
+                                    console.log('All time - start:', new Date(allTimeStart), 'end:', new Date(allTimeEnd));
+                                    chart.zoomX(allTimeStart, allTimeEnd);
+                                });
+                            }
+        
+                            document.addEventListener('DOMContentLoaded', function() {
+                                fetch(`/api/logbooks/`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        console.log('Response data:', data);
+                                        let seriesData = data[0];
+                                        
+                                        // Calculate all-time range
+                                        allTimeStart = Math.min(...seriesData.data.map(point => point[0]));
+                                        allTimeEnd = Math.max(...seriesData.data.map(point => point[0]));
+                                        
+                                        var options = {
+                                            series: [seriesData],
+                                            chart: {
+                                                type: 'line',
+                                                height: 350,
+                                                zoom: {
+                                                    enabled: true,
+                                                    type: 'x',
+                                                    autoScaleYaxis: true
+                                                },
+                                                toolbar: {
+                                                    autoSelected: 'zoom',
+                                                    tools: {
+                                                        reset: true
+                                                    }
+                                                }
+                                            },
+                                            xaxis: {
+                                                type: 'datetime',
+                                                labels: {
+                                                    format: 'MMM-dd-yyyy',
+                                                    datetimeUTC: false
+                                                },
+                                            },
+                                            grid: {
+                                                row: {
+                                                    colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                                                    opacity: 0.5
+                                                },
+                                                },
+                                            yaxis: {
+                                                title: {
+                                                    text: 'Records'
+                                                },
+                                                forceNiceScale: true
+                                            },
+                                            tooltip: {
+                                                x: {
+                                                    format: 'MMM-dd-yyyy HH:mm'
+                                                }
+                                            },
+                                            dataLabels: {
+                                                enabled: false
+                                            },
+                                        };
+                                        chart = new ApexCharts(document.querySelector("#chart"), options);
+                                        chart.render().then(() => {
+                                            setupEventListeners();
+                                        });
+                                    })
+                                    .catch(error => console.error('Error fetching data:', error));
+                            });
+                        </script>
+                    </div>
+                </div>
+            
             </div>
         </div>
+        <!-- End left side -->
+
+        <!-- right side -->
+        <div class="col-lg-4">
+            <div class="card info-card sales-card">
+
+                <div class="card-body">
+                <h5 class="card-title">Stocks Near Expiration <span>| Overview</span></h5>
+                
+                <!-- statistic 1 - top 1 least amount of stock -->
+                {% for object in expiring_stocks %}
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-{{ forloop.counter }}-circle"></i>
+                        </div>
+                        <div class="ps-3">
+                        <h6>{{ object }}</h6>
+                        <span class="text-muted small pt-2 ps-1">Expiring on {{ object.expiration_date }}</span>
+                        </div>
+                    </div>
+                {% empty %}
+                    <h6><i class="bi bi-calendar-check-fill mx-3"></i>No stocks near expiry</h6>
+                {% endfor %}
+
+                </div>
+            </div>
+
+            <div class="card info-card sales-card">
+                <div class="card-body">
+                <h5 class="card-title">Low Stocks <span>| Stocks less than 20</span></h5>
+                <!-- statistic 1 - top 1 least amount of stock -->
+                {% for object in low_stocks %}
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-{{ forloop.counter }}-circle"></i>
+                        </div>
+                        <div class="ps-3">
+                        <h6>{{ object }}</h6>
+                        <span class="text-muted small pt-2 ps-1">Stock left: {{ object.current_stock }}</span>
+                        </div>
+                    </div>
+                {% empty %}
+                    <h6><i class="bi bi-check-circle-fill mx-3"></i>No Low Stocks</h6>
+                {% endfor %}
+    
+                </div>
+            </div>
+
+        </div>
+        <!-- end of right side -->
 
     </div>
-
 </div>
 {% endblock content %}

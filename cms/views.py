@@ -8,11 +8,15 @@ from .models import *
 from .forms import *
 from .filters import *
 
-from django.db.models import Count, DateTimeField
+from django.db.models import Count, DateTimeField, Sum, F, Q
 from django.db.models.functions import TruncHour, TruncDay, TruncMonth, TruncYear
 from django.utils.timezone import localtime
+from django.utils import timezone
 from collections import defaultdict
 from django.utils.timezone import localtime, is_naive, make_aware
+from datetime import datetime, timedelta
+
+from django.db.models.functions import Coalesce
 
 
 
@@ -43,7 +47,8 @@ def login_view(request):
 def dashboard_view(request):
 
     # for dates
-    today = timezone.now().date()
+    today = timezone.localdate()
+    one_month_later = today + timedelta(days=30)
 
     # PATIENT CARD---------------------------------------------------
 
@@ -56,12 +61,19 @@ def dashboard_view(request):
     medical_certificate_count = Medicalcertificate_logbook.objects.filter(created_at__date=today).count()
     total_records_today = treatment_count + referral_count + medical_certificate_count
 
-    # LOW STOCK CARD-------------------------------------------
+    # EXPIRING MEDICINES CARD-------------------------------------------
 
+    expiring_stocks = Stock.objects.filter(expiration_date__lte=one_month_later).order_by('expiration_date')
+    
+    # LOW STOCKS CARD-------------------------------------------
 
+    low_stocks = Stock.objects.filter(current_stock__lt=20)
+    
     context = {
         'number_of_patients': number_of_patients,
         'total_records_today': total_records_today,
+        'expiring_stocks': expiring_stocks,
+        'low_stocks': low_stocks,
     }
     
     return render(request, 'cms/MainMenu.html', context)
@@ -668,8 +680,63 @@ def prescriptionform_export_view(request):
 
 @login_required(login_url="Login")
 def chart_view(request):
+     # Get query parameters
+    selected_years = request.GET.getlist('years')
+    selected_medicines = request.GET.getlist('medicines')
     
-    return render(request, 'cms/chart.html')
+    # Convert years to integers
+    years = [int(year) for year in selected_years]
+
+    
+    # Prepare data for each selected medicine
+    data = []
+    for medicine_id in selected_medicines:
+        medicine_data = {
+            'name': Stock.objects.get(id=medicine_id).medicine.brand_name,
+            'stock_levels': [],
+            'usage': []
+        }
+        
+        for year in years:
+            for month in range(1, 13):
+                # Get stock levels at the end of each month
+                stock_level = Stock.objects.filter(
+                    medicine_id=medicine_id,
+                    created_at__year=year,
+                    created_at__month=month
+                ).aggregate(Sum('current_stock'))['current_stock__sum'] or 0
+                print(f"stock_level: {stock_level}")
+                
+                # Get usage for each month
+                usage = Prescription.objects.filter(
+                    medicine_id=medicine_id,
+                    created_at__year=year,
+                    created_at__month=month
+                ).aggregate(Sum('quantity_prescribed'))['quantity_prescribed__sum'] or 0
+                print(f"usage: {usage}")
+                
+                medicine_data['stock_levels'].append({
+                    'x': f"{year}-{month:02d}",
+                    'y': stock_level
+                })
+                medicine_data['usage'].append({
+                    'x': f"{year}-{month:02d}",
+                    'y': usage
+                })
+        
+        data.append(medicine_data)
+    
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse(data, safe=False)
+    
+    # If not an AJAX request, render the template
+    medicines = Stock.objects.values('id', 'medicine__brand_name').distinct()
+    years = Stock.objects.dates('created_at', 'year').distinct()
+    
+    return render(request, 'cms/chart.html', {
+        'medicines': medicines,
+        'years': years
+    })
 
 
 #API==================================================================================================
@@ -692,8 +759,33 @@ def get_logbook_data(request):
     # Combine all data
     combined_data = list(medical_certificates) + list(treatments) + list(referrals)
    
-    # Aggregate data by the specified group
+    # Create a defaultdict to store the grouped data, initialize counts to 0
     grouped_data = defaultdict(lambda: {'count': 0})
+
+    # Sort combined data by timestamp
+    combined_data.sort(key=lambda entry: entry['timestamp'])
+
+    if combined_data:
+        # Get the first and last timestamps in the data
+        start_time = combined_data[0]['timestamp']
+        end_time = combined_data[-1]['timestamp']
+
+        # Ensure the start and end times are aware (UTC)
+        if is_naive(start_time):
+            start_time = make_aware(start_time)
+        if is_naive(end_time):
+            end_time = make_aware(end_time)
+
+        # Create a time range from the start to end with hourly intervals
+        current_time = start_time
+        while current_time <= end_time:
+            local_time = localtime(current_time)  # Convert to local time
+            formatted_time = local_time.isoformat()
+            # Ensure the time is included in the grouped_data, even if no records
+            grouped_data[formatted_time]['count'] += 0  # Set count to 0 if no record exists
+            current_time += timedelta(hours=1)
+
+    # Add actual counts from combined data
     for entry in combined_data:
         utc_time = entry['timestamp']
        
@@ -714,5 +806,3 @@ def get_logbook_data(request):
     }
 
     return JsonResponse([series_data], safe=False)
-
-

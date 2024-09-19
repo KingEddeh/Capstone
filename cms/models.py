@@ -1,6 +1,12 @@
 from django.db import models
 from django.utils import timezone
 
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+import calendar
+from datetime import date
+from django.db.models import Sum
+
 
 class patient(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -33,8 +39,6 @@ class patient(models.Model):
 
 #healthcare provider model = authenticated user, gamit ng request.user
 
-
-
 class Medicine(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -47,8 +51,6 @@ class Medicine(models.Model):
 
     def __str__(self):
         return f'{self.brand_name} ({self.generic_name})'
-
-
 
 class Stock(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -80,8 +82,6 @@ class Stock(models.Model):
     def __str__(self):
         return f'{self.medicine.brand_name} {self.medicine.dosage_strength} Stock #{self.id}'
 
-
-
 #logbooks
 class Medicalcertificate_logbook(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -96,8 +96,6 @@ class Medicalcertificate_logbook(models.Model):
     def __str__(self):
         return f'Medical Certificate to {self.unique_number} by {self.provider}'
 
-
-
 class Treatment_logbook(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -108,8 +106,6 @@ class Treatment_logbook(models.Model):
 
     def __str__(self):
         return f'Treatment {self.unique_number} by {self.provider}'
-
-
 
 class Referral(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -133,8 +129,6 @@ class Referral(models.Model):
     def __str__(self):
         return f'Referral {self.unique_number} by {self.provider}'
 
-
-
 #for treatment logbook
 class Prescription(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -150,6 +144,7 @@ class Prescription(models.Model):
         if self.medicine.current_stock >= self.quantity_prescribed:
             self.medicine.current_stock -= self.quantity_prescribed
             self.medicine.save()
+            self.update_monthly_stock(self.medicine)
         else:
             raise ValueError(f"Not enough stock for {self.medicine.medicine.brand_name}")
         return super().save(*args, **kwargs)
@@ -158,7 +153,27 @@ class Prescription(models.Model):
         if self.medicine:
             self.medicine.current_stock += self.quantity_prescribed
             self.medicine.save()
+            self.update_monthly_stock(self.medicine)
         return super().delete(*args, **kwargs)
+
+    def update_monthly_stock(self, stock_instance):
+        year = stock_instance.created_at.year
+        month = stock_instance.created_at.month
+
+        # Get the total stock for that medicine, year, and month
+        stock_sum = Stock.objects.filter(
+            medicine=stock_instance.medicine,
+            created_at__year=year,
+            created_at__month=month
+        ).aggregate(total_stock=Sum('current_stock'))['total_stock'] or 0
+
+        # Update or create the MonthlyStock record
+        MonthlyStock.objects.update_or_create(
+            medicine=stock_instance.medicine,
+            year=year,
+            month=month,
+            defaults={'stock_level': stock_sum}
+        )
 
     def __str__(self):
         return f'{self.quantity_prescribed} {self.medicine}'

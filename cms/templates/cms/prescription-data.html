@@ -34,15 +34,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for Stock in records %}
+                            {% for Prescription in records %}
                             <tr>
                                 <td>{{Prescription.treatment_logbook.id}}</td>
                                 <td>{{Prescription.medicine}}</td>
                                 <td>{{Prescription.quantity_prescribed}}</td>
                                 <td>{{Prescription.description}}</td>
                                 <td>
-                                    <a href="{% url "Inventory Update" Stock.id %}"><button class="btn btn-primary" type="button">Update</button></a>
-                                    <a href="{% url "Inventory Delete" Stock.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
+                                    <a href="{% url "Prescription Update" Prescription.id %}"><button class="btn btn-primary" type="button">Update</button></a>
+                                    <a href="{% url "Prescription Delete" Prescription.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -54,7 +54,7 @@
 
         <div class="col-lg-3">
             <div class="card card-body">
-                <h2 class="card-title text-center">Search</h2>
+                <h2 class="card-title text-center">Advanced Search</h2>
                 <hr>
                 <div class="form-group">
                     <form method="GET">

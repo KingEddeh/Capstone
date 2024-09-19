@@ -2,54 +2,145 @@
 {% block title %}Data Analytics{% endblock title %}
 {% block content %}
 <div class="container">
-    <div class="row">
-
-        <div class="col-lg-6">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Line Chart</h5>
-  
-                <!-- Line Chart -->
-                <div id="lineChart"></div>
-  
-                <script>
-                  document.addEventListener("DOMContentLoaded", () => {
-                    new ApexCharts(document.querySelector("#lineChart"), {
-                      series: [{
-                        name: "Desktops",
-                        data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
-                      }],
-                      chart: {
-                        height: 350,
-                        type: 'line',
-                        zoom: {
-                          enabled: false
-                        }
-                      },
-                      dataLabels: {
-                        enabled: false
-                      },
-                      stroke: {
-                        curve: 'straight'
-                      },
-                      grid: {
-                        row: {
-                          colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                          opacity: 0.5
-                        },
-                      },
-                      xaxis: {
-                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-                      }
-                    }).render();
-                  });
-                </script>
-                <!-- End Line Chart -->
-  
+  <div class="row">
+    <div class="pagetitle">
+      <h1>Data Analytics</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'Dashboard'%}">Dashboard</a></li>
+          <li class="breadcrumb-item active">Data Analytics</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+    <!-- Medicine Statistics Chart -->
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title">Medicine Statistics</h2>
+          <form id="filter-form" class="mb-4">
+            <div class="row">
+              <div class="col-md-6">
+                <label class="form-label">Select Years:</label>
+                <div class="form-check">
+                  {% for year in years %}
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name="years" value="{{ year.year }}" id="year-{{ year.year }}">
+                      <label class="form-check-label" for="year-{{ year.year }}">{{ year.year }}</label>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Select Medicines:</label>
+                <div class="form-check">
+                  {% for medicine in medicines %}
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name="medicines" value="{{ medicine.id }}" id="medicine-{{ medicine.id }}">
+                      <label class="form-check-label" for="medicine-{{ medicine.id }}">{{ medicine.medicine__brand_name }}</label>
+                    </div>
+                  {% endfor %}
+                </div>
               </div>
             </div>
-          </div>
-        
+            <button type="submit" class="btn btn-primary mt-3">Generate Chart</button>
+          </form>
+         
+          <div id="chart"></div>
+        </div>
+      </div>
     </div>
+    <!-- End Medicine Statistics Chart -->
+  </div>
 </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+  $(document).ready(function() {
+    $('#filter-form').on('submit', function(e) {
+      e.preventDefault();
+      var formData = $(this).serialize();
+      
+      $.ajax({
+        url: '{% url "chart" %}',
+        data: formData,
+        dataType: 'json',
+        success: function(data) {
+          renderChart(data);
+        },
+        error: function(xhr, status, error) {
+          console.error("An error occurred: " + error);
+          alert("An error occurred while fetching data. Please try again.");
+        }
+      });
+    });
+  });
+  
+  function renderChart(data) {
+    var options = {
+      series: [],
+      chart: {
+        height: 450,
+        type: 'line',
+        zoom: {
+          enabled: true
+        },
+      },
+      dataLabels: {
+        enabled: false
+      },
+      title: {
+        text: 'Medicine Usage'
+      },
+      xaxis: {
+        type: 'datetime',
+        labels: {
+            formatter: function(value, timestamp) {
+                return new Date(timestamp).toLocaleDateString('default', { month: 'short', year: 'numeric' });
+            }
+        }
+      },
+      yaxis: [
+        {
+          title: {
+            text: 'Stock Level'
+          }
+        },
+        {
+          opposite: true,
+          title: {
+            text: 'Usage'
+          }
+        }
+      ],
+      tooltip: {
+        shared: true,
+        intersect: false,
+      },
+      legend: {
+        position: 'top'
+      }
+    };
+    
+    data.forEach(function(medicine) {
+      options.series.push({
+        name: medicine.name + ' Stocks',
+        type: 'line',
+        data: medicine.stock_levels
+      });
+      options.series.push({
+        name: medicine.name + ' Usage',
+        type: 'column',
+        data: medicine.usage
+      });
+    });
+    
+    if (window.chart instanceof ApexCharts) {
+      window.chart.destroy();
+    }
+    window.chart = new ApexCharts(document.querySelector("#chart"), options);
+    window.chart.render();
+  }
+</script>
+{% endblock extra_js %}

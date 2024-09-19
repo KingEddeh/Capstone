@@ -20,8 +20,8 @@
                     <a class="btn btn-success mt-2 mx-1 btn-block" href= {% url "Inventory Add" %}>
                         Add Inventory
                     </a>
-                    <a class="btn btn-success mt-2 mx-1 btn-block" href= {% url "Medicine Data" %}>
-                        Add Medicine
+                    <a class="btn btn-primary mt-2 mx-1 btn-block" href= {% url "Medicine Data" %}>
+                        Manage Medicines
                     </a>
                 </div>
                 <hr>
@@ -30,7 +30,7 @@
                         <thead>
                             <tr>
                                 <th class="table-primary">Stock Name</th>
-                                <th class="table-primary">Medicine</th>
+                                <th class="table-primary">Added</th>
                                 <th class="table-primary">Initial Stock</th>
                                 <th class="table-primary">Current Stock</th>
                                 <th class="table-primary">Expiration Date</th>
@@ -41,7 +41,7 @@
                             {% for Stock in records %}
                             <tr>
                                 <td>{{Stock}}</td>
-                                <td>{{Stock.medicine.brand_name}}</td>
+                                <td>{{Stock.created_at}}</td>
                                 <td>{{Stock.initial_stocks}}</td>
                                 <td>{{Stock.current_stock}}</td>
                                 <td>{{Stock.expiration_date}}</td>
