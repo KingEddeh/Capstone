@@ -53,7 +53,7 @@ urlpatterns = [
 
     #Prescription
     path('prescriptiondata/<str:fk>/', views.prescriptiondata_view, name="Prescription Data"),
-    path('prescriptionform-add/', views.prescriptionform_add_view, name="Prescription Add"),
+    path('prescriptionform-add/<int:fk>/', views.prescriptionform_add_view, name="Prescription Add"),
     path('prescriptionform-update/<str:pk>/', views.prescriptionform_update_view, name="Prescription Update"),
     path('prescriptionform-delete/<str:pk>/', views.prescriptionform_delete_view, name="Prescription Delete"),
     path('prescriptionform-export/', views.prescriptionform_export_view, name="Prescription Export"),

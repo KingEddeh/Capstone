@@ -607,8 +607,9 @@ def prescriptiondata_view(request, fk):
     return render(request, 'cms/prescription-data.html', context)
 
 @login_required(login_url="Login")
-def prescriptionform_add_view(request):
+def prescriptionform_add_view(request, fk):
 
+    p = get_object_or_404(Treatment_logbook, id=fk)
     form = PrescriptionForm()
     if request.method == "POST":
         form = PrescriptionForm(request.POST)
@@ -617,10 +618,11 @@ def prescriptionform_add_view(request):
             if not prescription_instance.provider:
                 prescription_instance.provider = request.user.username
             prescription_instance.provider_updated = request.user.username
+            prescription_instance.treatment_logbook = p
             form.save()
             return redirect('Treatment Data')
 
-    context = {'form':form}
+    context = {'form':form, 'p':p}
 
     return render(request, 'cms/prescription-form.html', context)
 
@@ -680,14 +682,13 @@ def prescriptionform_export_view(request):
 
 @login_required(login_url="Login")
 def chart_view(request):
-     # Get query parameters
+    # Get query parameters
     selected_years = request.GET.getlist('years')
     selected_medicines = request.GET.getlist('medicines')
-    
+   
     # Convert years to integers
     years = [int(year) for year in selected_years]
-
-    
+   
     # Prepare data for each selected medicine
     data = []
     for medicine_id in selected_medicines:
@@ -696,43 +697,45 @@ def chart_view(request):
             'stock_levels': [],
             'usage': []
         }
-        
+       
+        cumulative_stock = 0  # Initialize cumulative stock
         for year in years:
             for month in range(1, 13):
-                # Get stock levels at the end of each month
-                stock_level = Stock.objects.filter(
+                # Get stock added this month
+                stock_added = Stock.objects.filter(
                     medicine_id=medicine_id,
                     created_at__year=year,
                     created_at__month=month
-                ).aggregate(Sum('current_stock'))['current_stock__sum'] or 0
-                print(f"stock_level: {stock_level}")
+                ).aggregate(Sum('initial_stocks'))['initial_stocks__sum'] or 0
                 
-                # Get usage for each month
+                # Get usage for this month
                 usage = Prescription.objects.filter(
                     medicine_id=medicine_id,
                     created_at__year=year,
                     created_at__month=month
                 ).aggregate(Sum('quantity_prescribed'))['quantity_prescribed__sum'] or 0
-                print(f"usage: {usage}")
+                
+                # Update cumulative stock
+                cumulative_stock += stock_added - usage
                 
                 medicine_data['stock_levels'].append({
                     'x': f"{year}-{month:02d}",
-                    'y': stock_level
+                    'y': cumulative_stock
                 })
                 medicine_data['usage'].append({
                     'x': f"{year}-{month:02d}",
                     'y': usage
                 })
-        
+       
         data.append(medicine_data)
-    
+   
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse(data, safe=False)
-    
+   
     # If not an AJAX request, render the template
     medicines = Stock.objects.values('id', 'medicine__brand_name').distinct()
     years = Stock.objects.dates('created_at', 'year').distinct()
-    
+   
     return render(request, 'cms/chart.html', {
         'medicines': medicines,
         'years': years

@@ -144,7 +144,6 @@ class Prescription(models.Model):
         if self.medicine.current_stock >= self.quantity_prescribed:
             self.medicine.current_stock -= self.quantity_prescribed
             self.medicine.save()
-            self.update_monthly_stock(self.medicine)
         else:
             raise ValueError(f"Not enough stock for {self.medicine.medicine.brand_name}")
         return super().save(*args, **kwargs)
@@ -153,27 +152,7 @@ class Prescription(models.Model):
         if self.medicine:
             self.medicine.current_stock += self.quantity_prescribed
             self.medicine.save()
-            self.update_monthly_stock(self.medicine)
         return super().delete(*args, **kwargs)
-
-    def update_monthly_stock(self, stock_instance):
-        year = stock_instance.created_at.year
-        month = stock_instance.created_at.month
-
-        # Get the total stock for that medicine, year, and month
-        stock_sum = Stock.objects.filter(
-            medicine=stock_instance.medicine,
-            created_at__year=year,
-            created_at__month=month
-        ).aggregate(total_stock=Sum('current_stock'))['total_stock'] or 0
-
-        # Update or create the MonthlyStock record
-        MonthlyStock.objects.update_or_create(
-            medicine=stock_instance.medicine,
-            year=year,
-            month=month,
-            defaults={'stock_level': stock_sum}
-        )
 
     def __str__(self):
         return f'{self.quantity_prescribed} {self.medicine}'

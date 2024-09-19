@@ -173,6 +173,7 @@ class PrescriptionFilter(BootstrapFilterSet):
     updated_at = django_filters.DateFromToRangeFilter(
         widget=RangeWidget(attrs={'placeholder': 'YYYY-MM-DD', 'type': 'date', 'class': 'form-control'})
     )
+    quantity_prescribed = django_filters.NumberFilter(field_name='quantity_prescribed', widget=NumberInput(attrs={'class': 'form-control'}))
     class Meta:
         model = Prescription
         fields = '__all__'

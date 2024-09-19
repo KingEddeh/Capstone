@@ -79,68 +79,60 @@
   
   function renderChart(data) {
     var options = {
-      series: [],
-      chart: {
-        height: 450,
-        type: 'line',
-        zoom: {
-          enabled: true
+        series: [],
+        chart: {
+            height: 450,
+            type: 'line',
+            zoom: {
+                enabled: true
+            },
         },
-      },
-      dataLabels: {
-        enabled: false
-      },
-      title: {
-        text: 'Medicine Usage'
-      },
-      xaxis: {
-        type: 'datetime',
-        labels: {
-            formatter: function(value, timestamp) {
-                return new Date(timestamp).toLocaleDateString('default', { month: 'short', year: 'numeric' });
+        dataLabels: {
+            enabled: false
+        },
+        title: {
+            text: 'Medicine Usage'
+        },
+        xaxis: {
+            type: 'datetime',
+            labels: {
+                formatter: function(value, timestamp) {
+                    return new Date(timestamp).toLocaleDateString('default', { month: 'short', year: 'numeric' });
+                }
             }
-        }
-      },
-      yaxis: [
-        {
-          title: {
-            text: 'Stock Level'
-          }
         },
-        {
-          opposite: true,
-          title: {
-            text: 'Usage'
-          }
+        yaxis: {
+            title: {
+                text: 'Stock Level / Usage'
+            }
+        },
+        tooltip: {
+            shared: true,
+            intersect: false,
+        },
+        legend: {
+            position: 'top'
         }
-      ],
-      tooltip: {
-        shared: true,
-        intersect: false,
-      },
-      legend: {
-        position: 'top'
-      }
     };
-    
+
     data.forEach(function(medicine) {
-      options.series.push({
-        name: medicine.name + ' Stocks',
-        type: 'line',
-        data: medicine.stock_levels
-      });
-      options.series.push({
-        name: medicine.name + ' Usage',
-        type: 'column',
-        data: medicine.usage
-      });
+        options.series.push({
+            name: medicine.name + ' Stock Level',
+            type: 'line',
+            data: medicine.stock_levels
+        });
+        options.series.push({
+            name: medicine.name + ' Stock Used',
+            type: 'column',
+            data: medicine.usage
+        });
     });
-    
+
     if (window.chart instanceof ApexCharts) {
-      window.chart.destroy();
+        window.chart.destroy();
     }
     window.chart = new ApexCharts(document.querySelector("#chart"), options);
     window.chart.render();
-  }
+}
 </script>
 {% endblock extra_js %}

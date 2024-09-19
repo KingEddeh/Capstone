@@ -5,6 +5,17 @@
 
 {% block content %}
 <div class="container">
+    <div class="pagetitle">
+        <h1>Prescription ({{p}})</h1>
+        <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'Dashboard'%}">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'Treatment Data'%}">Treatment Records</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'Prescription Data' p.id %}">Prescription ({{p}})</a></li>
+              <li class="breadcrumb-item active">Add Prescription</li>
+            </ol>
+          </nav>
+    </div><!-- End Page Title -->
     <div class="row">
         <div class="col-sm">
             <div class="card card-body">
