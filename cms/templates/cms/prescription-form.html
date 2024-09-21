@@ -1,5 +1,5 @@
 {% extends "cms/base.html" %}
-{% block title %}Add Prescription{% endblock title %}
+{% block title %}Prescription{% endblock title %}
 
 {% block head %}{{ form.media.css }}{% endblock head %}
 
@@ -10,7 +10,7 @@
         <nav>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="{% url 'Dashboard'%}">Dashboard</a></li>
-              <li class="breadcrumb-item"><a href="{% url 'Treatment Data'%}">Treatment Records</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'Treatment Data' 0 %}">Treatment Records</a></li>
               <li class="breadcrumb-item"><a href="{% url 'Prescription Data' p.id %}">Prescription ({{p}})</a></li>
               <li class="breadcrumb-item active">Add Prescription</li>
             </ol>

@@ -31,8 +31,8 @@ urlpatterns = [
     path('referralform-export/', views.referralform_export_view, name="Referral Export"),
 
     #Treatment
-    path('treatmentdata/', views.treatmentdata_view, name="Treatment Data"),
-    path('treatmentform-add/', views.treatmentform_add_view, name="Treatment Add"),
+    path('treatmentdata/<str:fk>/', views.treatmentdata_view, name="Treatment Data"),
+    path('treatmentform-add/<str:fk>/', views.treatmentform_add_view, name="Treatment Add"),
     path('treatmentform-update/<str:pk>/', views.treatmentform_update_view, name="Treatment Update"),
     path('treatmentform-delete/<str:pk>/', views.treatmentform_delete_view, name="Treatment Delete"),
     path('treatmentform-export/', views.treatmentform_export_view, name="Treatment Export"),
@@ -54,8 +54,8 @@ urlpatterns = [
     #Prescription
     path('prescriptiondata/<str:fk>/', views.prescriptiondata_view, name="Prescription Data"),
     path('prescriptionform-add/<int:fk>/', views.prescriptionform_add_view, name="Prescription Add"),
-    path('prescriptionform-update/<str:pk>/', views.prescriptionform_update_view, name="Prescription Update"),
-    path('prescriptionform-delete/<str:pk>/', views.prescriptionform_delete_view, name="Prescription Delete"),
+    path('prescriptionform-update/<str:pk>/<str:fk>/', views.prescriptionform_update_view, name="Prescription Update"),
+    path('prescriptionform-delete/<str:pk>/<str:fk>/', views.prescriptionform_delete_view, name="Prescription Delete"),
     path('prescriptionform-export/', views.prescriptionform_export_view, name="Prescription Export"),
 
     #Data Analytics

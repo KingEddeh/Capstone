@@ -5,30 +5,44 @@
 <div class="container">
 
     <div class="pagetitle">
+        {% if fk == '0' %}
         <h1>Treatment Records</h1>
+        {% else %}
+        <h1>Treatment Record of {{ p }}</h1>
+        {% endif %}
+        
         <nav>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="{% url 'Dashboard'%}">Dashboard</a></li>
-              <li class="breadcrumb-item active">Treatment Records</li>
+              <li class="breadcrumb-item active">
+                {% if fk == '0' %}
+                Treatment Records
+                {% else %}
+                Treatment Record of {{ p }}
+                {% endif %}
+                </li>
             </ol>
           </nav>
     </div><!-- End Page Title -->
 
     <div class="row">
-
-        <!-- Table -->
         <div class="col-lg-9">
             <div class="card card-body">
-                <a class="btn btn-success m-3 btn-block" href="{% url 'Treatment Add' %}">
-                    Add Treatment Record
+                {% if fk == '0' %}
+                <hr>
+                <h5 class="d-flex justify-content-center"> To add Treatments, Go to Patient Data</h5>
+                {% else %}
+                <a class="btn btn-success m-3 btn-block" href="{% url 'Treatment Add' fk %}">
+                    Add Treatment Record for {{ p }}
                 </a>
+                {% endif %}
                 <hr>
                 <div class="table-responsive">
                     <table class="table datatable">
                         <thead>
                             <tr>
                                 <th class="table-primary">Patient</th>
-                                <th class="table-primary">Description</th>
+                                <th class="table-primary">Chief Complaint</th>
                                 <th class="table-primary">Prescription</th>
                                 <th class="table-primary">Provider</th>
                                 <th class="table-primary">Actions</th>
@@ -36,7 +50,7 @@
                         </thead>
                         <tbody>
                             {% for Treatment_logbook in records %}
-                            <tr>
+                            <tr {% if not Treatment_logbook.prescriptions.all %}class="table-danger"{% endif %}>
                                 <td>{{Treatment_logbook.unique_number}}</td>
                                 <td>{{Treatment_logbook.description}}</td>
                                 <td>
@@ -48,7 +62,7 @@
                                         </tr>
                                         {% empty %}
                                         <tr>
-                                            <td colspan="2">No prescriptions</td>
+                                            <td class="table-danger" colspan="2">No prescriptions</td>
                                         </tr>
                                         {% endfor %}
                                     </table>

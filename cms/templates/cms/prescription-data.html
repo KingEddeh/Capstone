@@ -8,7 +8,7 @@
         <nav>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="{% url 'Dashboard'%}">Dashboard</a></li>
-              <li class="breadcrumb-item"><a href="{% url 'Treatment Data'%}">Treatment Records</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'Treatment Data' 0 %}">Treatment Records</a></li>
               <li class="breadcrumb-item active">Prescription ({{p}})</li>
             </ol>
           </nav>
@@ -27,7 +27,6 @@
                     <table class="table datatable">
                         <thead>
                             <tr>
-                                <th class="table-primary">Treatment Record ID</th>
                                 <th class="table-primary">Medicine</th>
                                 <th class="table-primary">Quantity Prescribed</th>
                                 <th class="table-primary">Description</th>
@@ -38,13 +37,12 @@
                         <tbody>
                             {% for Prescription in records %}
                             <tr>
-                                <td>{{Prescription.treatment_logbook.id}}</td>
                                 <td>{{Prescription.medicine}}</td>
                                 <td>{{Prescription.quantity_prescribed}}</td>
                                 <td>{{Prescription.description}}</td>
                                 <td>
-                                    <a href="{% url "Prescription Update" Prescription.id %}"><button class="btn btn-primary" type="button">Update</button></a>
-                                    <a href="{% url "Prescription Delete" Prescription.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
+                                    <a href="{% url "Prescription Update" Prescription.id p.id%}"><button class="btn btn-primary" type="button">Update</button></a>
+                                    <a href="{% url "Prescription Delete" Prescription.id p.id%}"><button class="btn btn-danger" type="button">Delete</button></a>
                                 </td>
                             </tr>
                             {% endfor %}

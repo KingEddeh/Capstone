@@ -7,8 +7,8 @@
 
         <div class="col-sm">
             <div class="card">
-                <h5 class="card-title">Are you sure you want to delete "{{p}}"?</h5>
                 <div class="card-body">
+                    <h5 class="card-title">Are you sure you want to delete "{{p}}"?</h5>
                     <div class="form-group">
                         <form action="{% url 'Patient Delete' p.id %}" method="POST">
                             {% csrf_token %}

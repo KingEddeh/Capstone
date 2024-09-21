@@ -18,6 +18,8 @@ from datetime import datetime, timedelta
 
 from django.db.models.functions import Coalesce
 
+from django.db import transaction
+
 
 
 def login_view(request):
@@ -63,11 +65,11 @@ def dashboard_view(request):
 
     # EXPIRING MEDICINES CARD-------------------------------------------
 
-    expiring_stocks = Stock.objects.filter(expiration_date__lte=one_month_later).order_by('expiration_date')
+    expiring_stocks = Stock.objects.filter(expiration_date__lte=one_month_later, current_stock__gt=0).order_by('expiration_date')
     
     # LOW STOCKS CARD-------------------------------------------
 
-    low_stocks = Stock.objects.filter(current_stock__lt=20)
+    low_stocks = Stock.objects.filter(current_stock__lt=20, current_stock__gt=0)
     
     context = {
         'number_of_patients': number_of_patients,
@@ -83,7 +85,7 @@ def dashboard_view(request):
 @login_required(login_url="Login")
 def patientdata_view(request):
 
-    myFilter = PatientFilter(request.GET, queryset=patient.objects.all())
+    myFilter = PatientFilter(request.GET, queryset=patient.objects.all().order_by('-id'))
     patients = myFilter.qs
 
     context = {'patients':patients, 'myFilter':myFilter}
@@ -94,19 +96,34 @@ def patientdata_view(request):
 def patientform_add_view(request):
 
     form = PatientForm()
+    form_treatment = TreatmentForm()
+
     if request.method == "POST":
         form = PatientForm(request.POST)
-        if form.is_valid():
-            patient_instance = form.save(commit=False)
-            if not patient_instance.provider:
-                patient_instance.provider = request.user.username
-            patient_instance.provider_updated = request.user.username
-            patient_instance.save()
-            form.save()
+        form_treatment = TreatmentForm(request.POST)
+
+        if form.is_valid() and form_treatment.is_valid():
+            with transaction.atomic():
+                # Save patient form
+                patient_instance = form.save(commit=False)
+                if not patient_instance.provider:
+                    patient_instance.provider = request.user.username
+                patient_instance.provider_updated = request.user.username
+                patient_instance.save()
+
+                autofill_uniquenumber_in_form = patient_instance
+
+                # Save treatment form
+                treatment_instance = form_treatment.save(commit=False)
+                if not treatment_instance.provider:
+                    treatment_instance.provider = request.user.username
+                treatment_instance.provider_updated = request.user.username
+                treatment_instance.unique_number = autofill_uniquenumber_in_form
+                treatment_instance.save()
+
             return redirect('Patient Data')
 
-    context = {'form':form}
-
+    context = {'form': form, 'form_treatment': form_treatment}
     return render(request, 'cms/patient-form.html', context)
 
 @login_required(login_url="Login")
@@ -172,7 +189,7 @@ def patientform_export_view(request):
 @login_required(login_url="Login")
 def medcertdata_view(request):
 
-    myFilter = MedcertFilter(request.GET, queryset=Medicalcertificate_logbook.objects.all())
+    myFilter = MedcertFilter(request.GET, queryset=Medicalcertificate_logbook.objects.all().order_by('-id'))
     records = myFilter.qs
 
     context = {'records':records, 'myFilter':myFilter}
@@ -257,7 +274,7 @@ def medcertform_export_view(request):
 @login_required(login_url="Login")
 def referraldata_view(request):
 
-    myFilter = ReferralFilter(request.GET, queryset=Referral.objects.all())
+    myFilter = ReferralFilter(request.GET, queryset=Referral.objects.all().order_by('-id'))
     records = myFilter.qs
 
     context = {'records':records, 'myFilter':myFilter}
@@ -339,30 +356,41 @@ def referralform_export_view(request):
 
 
 #Treatment Logbook
-def treatmentdata_view(request):
+def treatmentdata_view(request, fk):
 
-    myFilter = TreatmentFilter(request.GET, queryset=Treatment_logbook.objects.all())
+    if fk == '0':
+        p = '0'
+        myFilter = TreatmentFilter(request.GET, queryset=Treatment_logbook.objects.all().order_by('-id'))
+    else:
+        p = get_object_or_404(patient, id=fk)
+        myFilter = TreatmentFilter(request.GET, queryset=Treatment_logbook.objects.filter(unique_number__id=fk))
+
     records = myFilter.qs
 
-    context = {'records':records, 'myFilter':myFilter}
+    if fk == '0':
+        context = {'records':records, 'myFilter':myFilter, 'fk':fk}
+    else:
+        context = {'records':records, 'myFilter':myFilter, 'fk':fk, 'p':p}
 
     return render(request, 'cms/treatment-data.html', context)
 
 @login_required(login_url="Login")
-def treatmentform_add_view(request):
+def treatmentform_add_view(request, fk):
 
-    form = TreatmentForm()
+    p = get_object_or_404(patient, id=fk)
+    form_treatment = TreatmentForm()
     if request.method == "POST":
-        form = TreatmentForm(request.POST)
-        if form.is_valid():
-            treatment_instance = form.save(commit=False)
+        form_treatment = TreatmentForm(request.POST)
+        if form_treatment.is_valid():
+            treatment_instance = form_treatment.save(commit=False)
             if not treatment_instance.provider:
                 treatment_instance.provider = request.user.username
             treatment_instance.provider_updated = request.user.username
-            form.save()
-            return redirect('Treatment Data')
+            treatment_instance.unique_number = p
+            form_treatment.save()
+            return redirect('Treatment Data', fk=fk)
 
-    context = {'form':form}
+    context = {'form_treatment':form_treatment, 'p':p}
 
     return render(request, 'cms/treatment-form.html', context)
 
@@ -370,18 +398,18 @@ def treatmentform_add_view(request):
 def treatmentform_update_view(request, pk):
 
     treatment_instance = get_object_or_404(Treatment_logbook, id=pk)
-    form = TreatmentForm(instance=treatment_instance)
+    form_treatment = TreatmentForm(instance=treatment_instance)
     if request.method == "POST":
-        form = TreatmentForm(request.POST, instance=treatment_instance)
-        if form.is_valid():
-            treatment_instance = form.save(commit=False)
+        form_treatment = TreatmentForm(request.POST, instance=treatment_instance)
+        if form_treatment.is_valid():
+            treatment_instance = form_treatment.save(commit=False)
             if not treatment_instance.provider:
                 treatment_instance.provider = request.user.username
             treatment_instance.provider_updated = request.user.username
-            form.save()
-            return redirect('Treatment Data')
+            form_treatment.save()
+            return redirect('Treatment Data', fk=0)
 
-    context = {'form':form}
+    context = {'form_treatment':form_treatment}
 
     return render(request, 'cms/treatment-form.html', context)
 
@@ -391,7 +419,7 @@ def treatmentform_delete_view(request, pk):
     p = get_object_or_404(Treatment_logbook, id=pk)
     if request.method == "POST":
         p.delete()
-        return redirect('Treatment Data')
+        return redirect('Treatment Data', fk=0)
 
     context = {'p':p}
 
@@ -427,7 +455,7 @@ def treatmentform_export_view(request):
 @login_required(login_url="Login")
 def inventorydata_view(request):
 
-    myFilter = InventoryFilter(request.GET, queryset=Stock.objects.all())
+    myFilter = InventoryFilter(request.GET, queryset=Stock.objects.all().order_by('-id'))
     records = myFilter.qs
 
     context = {'records': records, 'myFilter': myFilter}
@@ -512,7 +540,7 @@ def inventoryform_export_view(request):
 @login_required(login_url="Login")
 def medicinedata_view(request):
 
-    myFilter = MedicineFilter(request.GET, queryset=Medicine.objects.all())
+    myFilter = MedicineFilter(request.GET, queryset=Medicine.objects.all().order_by('-id'))
     records = myFilter.qs
 
     context = {'records':records, 'myFilter':myFilter}
@@ -598,7 +626,7 @@ def medicineform_export_view(request):
 def prescriptiondata_view(request, fk):
 
     p = get_object_or_404(Treatment_logbook, id=fk)
-    myFilter = PrescriptionFilter(request.GET, queryset=Prescription.objects.filter(treatment_logbook__id=fk))
+    myFilter = PrescriptionFilter(request.GET, queryset=Prescription.objects.filter(treatment_logbook__id=fk).order_by('-id'))
     records = myFilter.qs
 
 
@@ -620,15 +648,16 @@ def prescriptionform_add_view(request, fk):
             prescription_instance.provider_updated = request.user.username
             prescription_instance.treatment_logbook = p
             form.save()
-            return redirect('Treatment Data')
+            return redirect('Prescription Data', fk=fk)
 
     context = {'form':form, 'p':p}
 
     return render(request, 'cms/prescription-form.html', context)
 
 @login_required(login_url="Login")
-def prescriptionform_update_view(request, pk):
+def prescriptionform_update_view(request, pk, fk):
 
+    p = get_object_or_404(Treatment_logbook, id=pk)
     prescription_instance = get_object_or_404(Prescription, id=pk)
     form = PrescriptionForm(instance=prescription_instance)
     if request.method == "POST":
@@ -639,21 +668,21 @@ def prescriptionform_update_view(request, pk):
                 prescription_instance.provider = request.user.username
             prescription_instance.provider_updated = request.user.username
             form.save()
-            return redirect('Treatment Data')
+            return redirect('Prescription Data', fk=fk)
         
-    context = {'form':form}
+    context = {'form':form, 'p':p}
 
     return render(request, 'cms/prescription-form.html', context)
 
 @login_required(login_url="Login")
-def prescriptionform_delete_view(request, pk):
+def prescriptionform_delete_view(request, pk, fk):
 
     p = get_object_or_404(Prescription, id=pk)
     if request.method == "POST":
         p.delete()
-        return redirect('Treatment Data')
+        return redirect('Prescription Data', fk=fk)
 
-    context = {'p':p}
+    context = {'p':p, 'fk':fk}
 
     return render(request, 'cms/prescription-delete.html', context)
 

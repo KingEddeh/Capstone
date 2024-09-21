@@ -27,8 +27,7 @@
                                 <th class="table-primary">ID Number</th>
                                 <th class="table-primary">Name</th>
                                 <th class="table-primary">Contact Number</th>
-                                <th class="table-primary">Sex</th>
-                                <th class="table-primary">Address</th>
+                                <th class="table-primary">Department</th>
                                 <th class="table-primary">Actions</th>
                             </tr>
                         </thead>
@@ -38,14 +37,16 @@
                                 <td>{{patient.unique_number}}</td>
                                 <td>{{patient.first_name}} {{patient.middle_name}} {{patient.last_name}} {{patient.suffix}}</th>
                                 <td>{{patient.contact_number}}</td>
-                                <td>{{patient.sex}}</td>
-                                <td>{{patient.address}}</td>
+                                <td>{{patient.department}}</td>
                                 <td>
                                     <a href="{% url 'Patient Update' patient.id %}">
                                         <button class="btn btn-primary" type="button">Update</button>
                                     </a>
                                     <a href="{% url 'Patient Delete' patient.id %}">
                                         <button class="btn btn-danger" type="button">Delete</button>
+                                    </a>
+                                    <a href="{% url 'Treatment Data' patient.id %}">
+                                        <button class="btn btn-success" type="button">Treatments</button>
                                     </a>
                                 </td>
                             </tr>

@@ -13,29 +13,43 @@ class patient(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     unique_number = models.CharField(unique=True, max_length=10)
     first_name = models.CharField(max_length=100)
-    middle_name = models.CharField(max_length=100, blank=True)
+    middle_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    suffix = models.CharField(max_length=2, blank=True, null=True)
+    suffix = models.CharField(max_length=2, blank=True)
     SEX_CHOICES = [
         ("Male", "Male"),
         ("Female", "Female"),
     ]
     sex = models.CharField(max_length=6, choices=SEX_CHOICES)
-    birthday = models.DateField(null=True)
-    address = models.CharField(max_length=100)
+    height = models.CharField(max_length=10, blank=True)
+    weight = models.CharField(max_length=10, blank=True)
+    address = models.CharField(max_length=100, blank=True)
     #for student only
+    DEPARTMENT_CHOICES = [
+        ("Empl", "Employee"),
+        ("COE", "COE - College of Education"),
+        ("CEA", "CEA - College of Architecture and Engineering"),
+        ("CBS", "CBS - College of Business Studies"),
+        ("CAS", "CAS - College of Arts and Science"),
+        ("CSSP", "CSSP - College of Scial Science and Philosophy"),
+        ("CCS", "CCS - College of Computing Studies"),
+        ("CHTM", "CHTM - College of Hospitality and Tourism Management"),
+        ("CIT", "CIT - College of Industrial Technology"),
+        ("Law", "Law - School of Law"),
+        ("GS", "GS - Graduate Studies"),
+        ("SHS", "SHS - Senior High School"),
+        ("LHS", "LHS - Laboratory High School"),
+    ]
+    department = models.CharField(max_length=4, choices=DEPARTMENT_CHOICES)
     course = models.CharField(max_length=100, blank=True, null=True)
-    year = models.PositiveIntegerField(blank=True, null=True)
-    section = models.CharField(max_length=100, blank=True, null=True)
+    year_and_section = models.CharField(max_length=10, blank=True)
     #mga wala sa documentation
-    contact_number = models.PositiveIntegerField(default=0)
-    emergency_number = models.PositiveIntegerField(default=0)
-    personal_email = models.CharField(max_length=100)
+    contact_number = models.PositiveIntegerField(default='09')
     provider = models.CharField(max_length=100, blank=True)
     provider_updated = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
-        return f'{self.unique_number} ({self.last_name}, {self.first_name})'
+        return f'{self.last_name}, {self.first_name} {self.middle_name}'
 
 #healthcare provider model = authenticated user, gamit ng request.user
 
@@ -68,6 +82,7 @@ class Stock(models.Model):
     current_stock = models.PositiveIntegerField(blank=True, null=True)
     provider = models.CharField(max_length=100, blank=True, null=True)
     provider_updated = models.CharField(max_length=100, blank=True)
+    disposed = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if self.pk == None:
@@ -80,13 +95,13 @@ class Stock(models.Model):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.medicine.brand_name} {self.medicine.dosage_strength} Stock #{self.id}'
+        return f'{self.medicine.brand_name} Stock #{self.id}'
 
 #logbooks
 class Medicalcertificate_logbook(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    unique_number = models.ForeignKey('Patient', on_delete=models.RESTRICT)
+    unique_number = models.CharField(max_length=100)
     purpose = models.CharField(max_length=100)
     note = models.CharField(max_length=1000, null=True, blank=True)
     received = models.BooleanField()
@@ -100,6 +115,26 @@ class Treatment_logbook(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     unique_number = models.ForeignKey('Patient', on_delete=models.RESTRICT)
+    CATEGORY_CHOICES = [
+        ("A", "A. Alimentary System"),
+        ("B", "B. Respiratory System"),
+        ("C", "C. Musculo-Skeletal System"),
+        ("D", "D. Integumentary System"),
+        ("E", "E. Urinary System"),
+        ("F", "F. Metabolic Endocrine System"),
+        ("G", "G. Cardiovascular System"),
+        ("H", "H. Eyes, Ears, Nose & Throat Disorders"),
+        ("I", "I. Communicable Diseases"),
+        ("J", "J. Blood Disorders"),
+        ("K", "K. Neurological Disorders"),
+        ("L", "L. OB-GYNE Cases"),
+        ("M", "M. Dental Cases"),
+        ("N", "N. Physical Examinations"),
+        ("O", "O. Referrals"),
+        ("P", "P. Follow-up Check-up"),
+        ("Q", "Q. Others"),
+    ]
+    category = models.CharField(max_length=1, choices=CATEGORY_CHOICES)
     description = models.CharField(max_length=1000)
     provider = models.CharField(max_length=100)
     provider_updated = models.CharField(max_length=100, blank=True)
@@ -110,7 +145,7 @@ class Treatment_logbook(models.Model):
 class Referral(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    unique_number = models.ForeignKey('Patient', on_delete=models.RESTRICT)
+    unique_number = models.CharField(max_length=100)
     description = models.CharField(max_length=1000, null=True, blank=True)
     HOSPITAL_CHOICES = [
         ("The Medical City Clark", "The Medical City Clark"),

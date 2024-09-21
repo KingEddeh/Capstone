@@ -34,17 +34,19 @@
                                 <th class="table-primary">Initial Stock</th>
                                 <th class="table-primary">Current Stock</th>
                                 <th class="table-primary">Expiration Date</th>
+                                <th class="table-primary">Disposed?</th>
                                 <th class="table-primary"></th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for Stock in records %}
-                            <tr>
+                            <tr {% if Stock.disposed == True %}class="table-danger"{% endif %}>
                                 <td>{{Stock}}</td>
                                 <td>{{Stock.created_at}}</td>
                                 <td>{{Stock.initial_stocks}}</td>
                                 <td>{{Stock.current_stock}}</td>
                                 <td>{{Stock.expiration_date}}</td>
+                                <td>{{Stock.disposed}}</td>
                                 <td>
                                     <a href="{% url "Inventory Update" Stock.id %}"><button class="btn btn-primary" type="button">Update</button></a>
                                     <a href="{% url "Inventory Delete" Stock.id %}"><button class="btn btn-danger" type="button">Delete</button></a>

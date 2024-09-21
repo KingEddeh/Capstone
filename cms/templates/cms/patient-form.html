@@ -8,7 +8,11 @@
                 <div class="form-group">
                     <form action="" method="POST">
                         {% csrf_token %}
+                        <h4 class="card-title">Add Patient Details</h4>
                         {{form.as_p}}
+                        <hr>
+                        <h4 class="card-title">Add Treatment Record</h4>
+                        {{ form_treatment.as_p }}
                         <input class="btn btn-success" type="submit" value="Submit">
                     </form>
                 </div>
