@@ -135,23 +135,16 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href={% url "Patient Data" %}>
           <i class="bi bi-people"></i>
-          <span>Patient Data</span>
+          <span>Patient Management</span>
         </a>
       </li><!-- End Patient Data Nav -->
-      
+
       <li class="nav-item">
-        <a class="nav-link collapsed" href={% url "Inventory Data" %}>
-          <i class="bi bi-box-seam"></i>
-          <span>Inventory</span>
+        <a class="nav-link collapsed" href="{% url 'department_cases_chart' %}">
+          <i class="bi bi-graph-up"></i>
+          <span>Patient Data Analytics</span>
         </a>
-      </li><!-- End Inventory Nav -->
-      
-      <li class="nav-item">
-        <a class="nav-link collapsed" href={% url "chart" %}>
-          <i class="bi bi-bar-chart-line"></i>
-          <span>Data Analytics</span>
-        </a>
-      </li><!-- End Data Analytics Nav -->
+      </li>
       
       <li class="nav-heading">Logbooks</li>
       
@@ -175,8 +168,22 @@
           <span>Treatment Logbook</span>
         </a>
       </li><!-- End Treatment Logbook Nav -->
-      
 
+      <li class="nav-heading">Inventory</li>
+      
+      <li class="nav-item">
+        <a class="nav-link collapsed" href={% url "Inventory Data" %}>
+          <i class="bi bi-box-seam"></i>
+          <span>Inventory Management</span>
+        </a>
+      </li><!-- End Inventory Nav -->
+      
+      <li class="nav-item">
+        <a class="nav-link collapsed" href={% url "chart" %}>
+          <i class="bi bi-bar-chart-line"></i>
+          <span>Inventory Data Analytics</span>
+        </a>
+      </li><!-- End Data Analytics Nav -->
     </ul>
 
   </aside><!-- End Sidebar-->

@@ -1,14 +1,14 @@
 {% extends "cms/base.html" %}
-{% block title %}Data Analytics{% endblock title %}
+{% block title %}Inventory Data Analytics{% endblock title %}
 {% block content %}
 <div class="container">
   <div class="row">
     <div class="pagetitle">
-      <h1>Data Analytics</h1>
+      <h1>Inventory Data Analytics</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'Dashboard'%}">Dashboard</a></li>
-          <li class="breadcrumb-item active">Data Analytics</li>
+          <li class="breadcrumb-item active">Inventory Data Analytics</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -16,11 +16,10 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          <h2 class="card-title">Medicine Statistics</h2>
           <form id="filter-form" class="mb-4">
             <div class="row">
               <div class="col-md-6">
-                <label class="form-label">Select Years:</label>
+                <label class="form-label card-title">Select Years:</label>
                 <div class="form-check">
                   {% for year in years %}
                     <div class="form-check form-check-inline">
@@ -31,7 +30,7 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <label class="form-label">Select Medicines:</label>
+                <label class="form-label card-title">Select Medicines:</label>
                 <div class="form-check">
                   {% for medicine in medicines %}
                     <div class="form-check form-check-inline">

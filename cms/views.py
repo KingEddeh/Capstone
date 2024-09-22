@@ -20,6 +20,7 @@ from django.db.models.functions import Coalesce
 
 from django.db import transaction
 
+import calendar
 
 
 def login_view(request):
@@ -65,11 +66,11 @@ def dashboard_view(request):
 
     # EXPIRING MEDICINES CARD-------------------------------------------
 
-    expiring_stocks = Stock.objects.filter(expiration_date__lte=one_month_later, current_stock__gt=0).order_by('expiration_date')
+    expiring_stocks = Stock.objects.filter(expiration_date__lte=one_month_later, current_stock__gt=0, disposed=False).order_by('expiration_date')
     
     # LOW STOCKS CARD-------------------------------------------
 
-    low_stocks = Stock.objects.filter(current_stock__lt=20, current_stock__gt=0)
+    low_stocks = Stock.objects.filter(current_stock__lt=20, current_stock__gt=0, disposed=False)
     
     context = {
         'number_of_patients': number_of_patients,
@@ -770,6 +771,44 @@ def chart_view(request):
         'years': years
     })
 
+@login_required(login_url="Login")
+def department_cases_view(request):
+    # Get query parameters
+    selected_year = request.GET.get('year')
+    selected_month = request.GET.get('month')
+
+    if selected_year and selected_month:
+        # Fetch data for the selected month and year
+        cases = Treatment_logbook.objects.filter(
+            created_at__year=selected_year,
+            created_at__month=selected_month
+        ).values('category', 'unique_number__department').annotate(
+            count=models.Count('id')
+        )
+
+        # Prepare data for the chart
+        departments = patient._meta.get_field('department').choices
+        categories = dict(Treatment_logbook._meta.get_field('category').choices)
+        
+        data = {dept[0]: {cat: 0 for cat in categories.keys()} for dept in departments}
+        
+        for case in cases:
+            dept = case['unique_number__department']
+            category = case['category']
+            count = case['count']
+            data[dept][category] = count
+
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse(data)
+
+    # If not an AJAX request or no year/month selected, render the template
+    years = Treatment_logbook.objects.dates('created_at', 'year').distinct()
+    months = [(i, calendar.month_name[i]) for i in range(1, 13)]
+
+    return render(request, 'cms/department_cases_chart.html', {
+        'years': years,
+        'months': months
+    })
 
 #API==================================================================================================
 #for Patient visits

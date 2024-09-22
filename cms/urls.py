@@ -60,6 +60,7 @@ urlpatterns = [
 
     #Data Analytics
     path('chart/', views.chart_view, name="chart"),
+    path('department-cases-chart/', views.department_cases_view, name='department_cases_chart'),
 
     #API==============================================================
     path('api/logbooks/', views.get_logbook_data, name="test"),
