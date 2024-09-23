@@ -3,14 +3,10 @@
 {% block head %}{{ form.media.css }}{% endblock head %}
 {% block content %}
 <div class="container">
+    
 
     <div class="pagetitle">
-        {% if fk == '0' %}
         <h1>Treatment Records</h1>
-        {% else %}
-        <h1>Treatment Record of {{ p }}</h1>
-        {% endif %}
-        
         <nav>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="{% url 'Dashboard'%}">Dashboard</a></li>
@@ -18,7 +14,7 @@
                 {% if fk == '0' %}
                 Treatment Records
                 {% else %}
-                Treatment Record of {{ p }}
+                Treatment Records of {{ p }}
                 {% endif %}
                 </li>
             </ol>
@@ -43,6 +39,7 @@
                             <tr>
                                 <th class="table-primary">Patient</th>
                                 <th class="table-primary">Chief Complaint</th>
+                                <th class="table-primary">Category</th>
                                 <th class="table-primary">Prescription</th>
                                 <th class="table-primary">Provider</th>
                                 <th class="table-primary">Actions</th>
@@ -53,6 +50,7 @@
                             <tr {% if not Treatment_logbook.prescriptions.all %}class="table-danger"{% endif %}>
                                 <td>{{Treatment_logbook.unique_number}}</td>
                                 <td>{{Treatment_logbook.description}}</td>
+                                <td>{{Treatment_logbook.category}}</td>
                                 <td>
                                     <table class="table table-borderless">
                                         {% for prescription in Treatment_logbook.prescriptions.all %}

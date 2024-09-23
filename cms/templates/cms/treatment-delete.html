@@ -2,6 +2,23 @@
 {% block title %}Delete Treatment Record{% endblock title %}
 {% block content %}
 <div class="container">
+    <div class="pagetitle">
+        <h1>Treatment Records</h1>
+        
+        <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'Dashboard'%}">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'Treatment Data' 0 %}">Treatment Records</a>
+                {% if fk == '0' %}
+                Treatment Records
+                {% else %}
+                Treatment Records of {{ p }}
+                {% endif %}
+              </a></li>
+              <li class="breadcrumb-item active">Delete </li>
+            </ol>
+          </nav>
+    </div><!-- End Page Title -->
 
     <div class="row">
 

@@ -2,6 +2,16 @@
 {% block title %}Delete Referral Record{% endblock title %}
 {% block content %}
 <div class="container">
+    <div class="pagetitle">
+        <h1>Referral Records</h1>
+        <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'Dashboard'%}">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'Referral Data'%}">Referral Records</a></li>
+              <li class="breadcrumb-item active">Delete Referral Record of {{p}}</li>
+            </ol>
+          </nav>
+    </div><!-- End Page Title -->
 
     <div class="row">
 

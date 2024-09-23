@@ -1,10 +1,20 @@
 {% extends "cms/base.html" %}
-{% block title %}Add Medical Certificate Record{% endblock title %}
+{% block title %}Medical Certificate Records{% endblock title %}
 
 {% block head %}{{ form.media.css }}{% endblock head %}
 
 {% block content %}
 <div class="container">
+    <div class="pagetitle">
+        <h1>Medical Certificate Records</h1>
+        <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'Dashboard'%}">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'Medcert Data'%}">Medical Certificate Records</a></li>
+              <li class="breadcrumb-item active">Add/Update</li>
+            </ol>
+          </nav>
+    </div><!-- End Page Title -->
     <div class="row">
         <div class="col-sm">
             <div class="card card-body">

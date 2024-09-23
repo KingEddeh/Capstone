@@ -2,6 +2,16 @@
 {% block title %}Delete Medical Certificate Record{% endblock title %}
 {% block content %}
 <div class="container">
+    <div class="pagetitle">
+        <h1>Medical Certificate Records</h1>
+        <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'Dashboard'%}">Dashboard</a></li>
+              <li class="breadcrumb-item">Medical Certificate Records</li>
+              <li class="breadcrumb-item active">Delete Medical Certificate of {{p}}</li>
+            </ol>
+          </nav>
+    </div><!-- End Page Title -->
 
     <div class="row">
 
