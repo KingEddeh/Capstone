@@ -766,17 +766,17 @@ def chart_view(request):
                     created_at__year=year,
                     created_at__month=month
                 ).aggregate(Sum('initial_stocks'))['initial_stocks__sum'] or 0
-               
+                
                 # Get usage for this month
                 usage = Prescription.objects.filter(
                     medicine_id=medicine_id,
                     created_at__year=year,
                     created_at__month=month
                 ).aggregate(Sum('quantity_prescribed'))['quantity_prescribed__sum'] or 0
-               
+                
                 # Update cumulative stock
                 cumulative_stock += stock_added - usage
-               
+                
                 medicine_data['stock_levels'].append({
                     'x': f"{year}-{month:02d}",
                     'y': cumulative_stock
