@@ -178,7 +178,7 @@ class Prescription(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:  # This is a new prescription
-            self.medicine = self.stock.medicine
+            self.medicine = self.stock.medicine.brand_name
             if self.stock.current_stock >= self.quantity_prescribed:
                 self.stock.current_stock -= self.quantity_prescribed
                 self.stock.save()

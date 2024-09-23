@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 
 from django.db.models.functions import Coalesce
 
-from django.db import transaction
+from django.db import transaction, IntegrityError
 
 import calendar
 
@@ -496,11 +496,16 @@ def inventoryform_update_view(request, pk):
     if request.method == "POST":
         form = InventoryForm(request.POST, instance=inventory_instance)
         if form.is_valid():
-            inventory_instance = form.save(commit=False)
-            if not inventory_instance.provider:
-                inventory_instance.provider = request.user.username
-            inventory_instance.provider_updated = request.user.username
-            form.save()
+            try:
+                inventory_instance = form.save(commit=False)
+                if not inventory_instance.provider:
+                    inventory_instance.provider = request.user.username
+                inventory_instance.provider_updated = request.user.username
+                form.save()
+            except IntegrityError as e:
+                messages.error(request, f"Updated stock is less than the stock already used in prescriptions. Error: {str(e)}")
+                return redirect('Inventory Update', pk=pk)
+
             return redirect('Inventory Data')
         
     context = {'form':form}
@@ -751,9 +756,9 @@ def chart_view(request):
     # Prepare data for each selected medicine
     data = []
     for medicine_id in selected_medicines:
-        medicine = Stock.objects.get(id=medicine_id).medicine
+        medicine = Medicine.objects.get(id=medicine_id).brand_name
         medicine_data = {
-            'name': medicine.brand_name,
+            'name': medicine,
             'stock_levels': [],
             'usage': []
         }

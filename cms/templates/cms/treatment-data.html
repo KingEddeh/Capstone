@@ -58,7 +58,7 @@
                                         {% for prescription in Treatment_logbook.prescriptions.all %}
                                         <tr>
                                             <td>{{ prescription.quantity_prescribed }}</td>
-                                            <td>{{ prescription.medicine.medicine.brand_name }}</td>
+                                            <td>{{ prescription.medicine }}</td>
                                         </tr>
                                         {% empty %}
                                         <tr>
