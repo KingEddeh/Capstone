@@ -751,7 +751,7 @@ def chart_view(request):
     # Prepare data for each selected medicine
     data = []
     for medicine_id in selected_medicines:
-        medicine = Stock.objects.filter(medicine_id=medicine_id).first().medicine
+        medicine = Stock.objects.get(id=medicine_id).medicine
         medicine_data = {
             'name': medicine.brand_name,
             'stock_levels': [],
@@ -770,7 +770,7 @@ def chart_view(request):
 
                 # Aggregate usage for the selected medicine across all prescriptions
                 usage = Prescription.objects.filter(
-                    medicine_id=medicine_id,
+                    medicine=medicine,
                     created_at__year=year,
                     created_at__month=month
                 ).aggregate(total_usage=Sum('quantity_prescribed'))['total_usage'] or 0

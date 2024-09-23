@@ -99,10 +99,10 @@ class PrescriptionForm(forms.ModelForm):
     class Meta:
         model = Prescription
         fields = '__all__'
-        exclude = ('provider', 'updated_at', 'provider_updated', 'treatment_logbook')
+        exclude = ('provider', 'updated_at', 'provider_updated', 'treatment_logbook', 'medicine')
         widgets = {
             'expiration_date': forms.DateInput(attrs={'class': 'form-control'}),
-            'medicine': s2forms.Select2Widget(attrs={'class': 'form-select'}),
+            'stock': s2forms.Select2Widget(attrs={'class': 'form-select'}),
             'quantity_prescribed': forms.NumberInput(attrs={'class': 'form-control'}),
             'description': forms.TextInput(attrs={'class': 'form-control'}),
         }
@@ -110,7 +110,7 @@ class PrescriptionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         today = timezone.now().date()
-        self.fields['medicine'].queryset = Stock.objects.filter(
+        self.fields['stock'].queryset = Stock.objects.filter(
             expiration_date__gt=today,
             current_stock__gt=0,
             disposed=False

@@ -169,25 +169,27 @@ class Prescription(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     treatment_logbook = models.ForeignKey('Treatment_logbook', on_delete=models.RESTRICT, related_name='prescriptions')
-    medicine = models.ForeignKey('Stock', on_delete=models.RESTRICT)
-    quantity_prescribed = models.PositiveIntegerField(default=1)
+    stock = models.ForeignKey('Stock', on_delete=models.RESTRICT)
+    medicine = models.CharField(max_length=100, null=True, blank=True)
+    quantity_prescribed = models.PositiveIntegerField()
     description = models.CharField(max_length=1000, null=True, blank=True)
     provider = models.CharField(max_length=100, blank=True)
     provider_updated = models.CharField(max_length=100, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.pk:  # This is a new prescription
-            if self.medicine.current_stock >= self.quantity_prescribed:
-                self.medicine.current_stock -= self.quantity_prescribed
-                self.medicine.save()
+            self.medicine = self.stock.medicine
+            if self.stock.current_stock >= self.quantity_prescribed:
+                self.stock.current_stock -= self.quantity_prescribed
+                self.stock.save()
             else:
-                raise ValueError(f"Not enough stock for {self.medicine.medicine.brand_name}")
+                raise ValueError(f"Not enough stock for {self.stock.medicine.brand_name}")
         return super().save(*args, **kwargs)
     
     def delete(self, *args, **kwargs):
-        self.medicine.current_stock += self.quantity_prescribed
-        self.medicine.save()
+        self.stock.current_stock += self.quantity_prescribed
+        self.stock.save()
         return super().delete(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.quantity_prescribed} {self.medicine}'
+        return f'{self.quantity_prescribed} {self.stock}'
