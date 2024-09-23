@@ -29,7 +29,6 @@
                                 <th class="table-primary">Generic Name</th>
                                 <th class="table-primary">Dosage Form</th>
                                 <th class="table-primary">Dosage Strength</th>
-                                <th class="table-primary">Expiration Date</th>
                                 <th class="table-primary">Actions</th>
                             </tr>
                         </thead>
@@ -40,7 +39,6 @@
                                 <td>{{Medicine.generic_name}}</td>
                                 <td>{{Medicine.dosage_form}}</td>
                                 <td>{{Medicine.dosage_strength}}</td>
-                                <td>{{Medicine.expiration_date}}</td>
                                 <td>
                                     <a href="{% url "Medicine Update" Medicine.id %}"><button class="btn btn-primary" type="button">Update</button></a>
                                     <a href="{% url "Medicine Delete" Medicine.id %}"><button class="btn btn-danger" type="button">Delete</button></a>

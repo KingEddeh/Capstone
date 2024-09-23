@@ -30,7 +30,7 @@
             <div class="card card-body">
                 {% if fk == '0' %}
                 <hr>
-                <h5 class="d-flex justify-content-center"> To add Treatments, Go to Patient Data</h5>
+                <h5 class="d-flex justify-content-center"> To add Treatments, Go to Patient Management</h5>
                 {% else %}
                 <a class="btn btn-success m-3 btn-block" href="{% url 'Treatment Add' fk %}">
                     Add Treatment Record for {{ p }}

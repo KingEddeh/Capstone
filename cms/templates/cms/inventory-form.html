@@ -9,6 +9,13 @@
         <div class="col-sm">
             <div class="card card-body">
                 <div class="form-group">
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li class="{{ message.tags }}"><h4 class="card-title text-danger">{{ message }}</h4></li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
                     <form action="" method="POST">
                         {% csrf_token %}
                         {{form.as_p}}

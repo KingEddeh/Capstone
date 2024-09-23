@@ -8,11 +8,16 @@
         <div class="col-sm">
             <div class="card">
                 <div class="card-body">
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li class="{{ message.tags }}"><h4 class="card-title text-danger">{{ message }}</h4></li>
+                        {% endfor %}
+                    </ul>
                     <h5 class="card-title">Are you sure you want to delete "{{p}}"?</h5>
                     <div class="form-group">
-                        <form action="{% url 'Treatment Delete' p.id %}" method="POST">
+                        <form action="{% url 'Medicine Delete' p.id %}" method="POST">
                             {% csrf_token %}
-                            <a href="{% url "Treatment Data" 0 %}" class="btn btn-secondary">Cancel</a>
+                            <a href="{% url "Medicine Data" %}" class="btn btn-secondary">Cancel</a>
                             <input class="btn btn-danger" type="submit" value="Delete">
                         </form>
                     </div>

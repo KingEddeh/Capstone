@@ -22,6 +22,9 @@ from django.db import transaction
 
 import calendar
 
+from django.contrib import messages
+from django.db.models import RestrictedError
+
 
 def login_view(request):
 
@@ -149,14 +152,15 @@ def patientform_update_view(request, pk):
 
 @login_required(login_url="Login")
 def patientform_delete_view(request, pk):
-
     p = get_object_or_404(patient, id=pk)
     if request.method == "POST":
-        p.delete()
-        return redirect('Patient Data')
-
-    context = {'p':p}
-
+        try:
+            p.delete()
+            return redirect('Patient Data')
+        except RestrictedError as e:
+            messages.error(request, f"{p} cannot be deleted with existing records. Error: {str(e)}")
+    
+    context = {'p': p}
     return render(request, 'cms/patient-delete.html', context)
 
 @login_required(login_url="Login")
@@ -419,8 +423,11 @@ def treatmentform_delete_view(request, pk):
 
     p = get_object_or_404(Treatment_logbook, id=pk)
     if request.method == "POST":
-        p.delete()
-        return redirect('Treatment Data', fk=0)
+        try:
+            p.delete()
+            return redirect('Treatment Data', fk=p.unique_number.id)
+        except RestrictedError as e:
+            messages.error(request, f"{p} cannot be deleted with existing prescriptions referencing this treatment record. Error: {str(e)}")
 
     context = {'p':p}
 
@@ -505,8 +512,12 @@ def inventoryform_delete_view(request, pk):
 
     p = get_object_or_404(Stock, id=pk)
     if request.method == "POST":
-        p.delete()
-        return redirect('Inventory Data')
+        try:
+            p.delete()
+            return redirect('Inventory Data')
+        except RestrictedError as e:
+            messages.error(request, f"{p} cannot be deleted with exisitng prescriptions referencing this stock. Error:{str(e)}")
+            return redirect('Inventory Delete', pk=pk)
 
     context = {'p':p}
 
@@ -590,8 +601,11 @@ def medicineform_delete_view(request, pk):
 
     p = get_object_or_404(Medicine, id=pk)
     if request.method == "POST":
-        p.delete()
-        return redirect('Medicine Data')
+        try:
+            p.delete()
+            return redirect('Treatment Data', fk=p.unique_number.id)
+        except RestrictedError as e:
+            messages.error(request, f"{p} cannot be deleted with existing stocks referencing this medicine. Error: {str(e)}")
 
     context = {'p':p}
 
@@ -643,12 +657,17 @@ def prescriptionform_add_view(request, fk):
     if request.method == "POST":
         form = PrescriptionForm(request.POST)
         if form.is_valid():
-            prescription_instance = form.save(commit=False)
-            if not prescription_instance.provider:
-                prescription_instance.provider = request.user.username
-            prescription_instance.provider_updated = request.user.username
-            prescription_instance.treatment_logbook = p
-            form.save()
+            try:
+                prescription_instance = form.save(commit=False)
+                if not prescription_instance.provider:
+                    prescription_instance.provider = request.user.username
+                prescription_instance.provider_updated = request.user.username
+                prescription_instance.treatment_logbook = p
+                form.save()
+            except ValueError as e:
+                messages.error(request, f"Not Enough Stock. Error: {str(e)}")
+                return redirect('Prescription Add', fk=fk)
+
             return redirect('Prescription Data', fk=fk)
 
     context = {'form':form, 'p':p}
@@ -658,17 +677,22 @@ def prescriptionform_add_view(request, fk):
 @login_required(login_url="Login")
 def prescriptionform_update_view(request, pk, fk):
 
-    p = get_object_or_404(Treatment_logbook, id=pk)
+    p = get_object_or_404(Treatment_logbook, id=fk)
     prescription_instance = get_object_or_404(Prescription, id=pk)
     form = PrescriptionForm(instance=prescription_instance)
     if request.method == "POST":
         form = PrescriptionForm(request.POST, instance=prescription_instance)
         if form.is_valid():
-            prescription_instance = form.save(commit=False)
-            if not prescription_instance.provider:
-                prescription_instance.provider = request.user.username
-            prescription_instance.provider_updated = request.user.username
-            form.save()
+            try:
+                prescription_instance = form.save(commit=False)
+                if not prescription_instance.provider:
+                    prescription_instance.provider = request.user.username
+                prescription_instance.provider_updated = request.user.username
+                form.save()
+            except ValueError as e:
+                messages.error(request, f"Not Enough Stock. Error: {str(e)}")
+                return redirect('Prescription Add', fk=fk)
+
             return redirect('Prescription Data', fk=fk)
         
     context = {'form':form, 'p':p}
@@ -680,7 +704,12 @@ def prescriptionform_delete_view(request, pk, fk):
 
     p = get_object_or_404(Prescription, id=pk)
     if request.method == "POST":
-        p.delete()
+        try:
+            p.delete()
+        except RestrictedError as e:
+            messages.error(request, "This item cannot be deleted due to foreign key constraints.")
+            return redirect('Prescription Delete')
+
         return redirect('Prescription Data', fk=fk)
 
     context = {'p':p, 'fk':fk}
@@ -737,17 +766,17 @@ def chart_view(request):
                     created_at__year=year,
                     created_at__month=month
                 ).aggregate(Sum('initial_stocks'))['initial_stocks__sum'] or 0
-                
+               
                 # Get usage for this month
                 usage = Prescription.objects.filter(
                     medicine_id=medicine_id,
                     created_at__year=year,
                     created_at__month=month
                 ).aggregate(Sum('quantity_prescribed'))['quantity_prescribed__sum'] or 0
-                
+               
                 # Update cumulative stock
                 cumulative_stock += stock_added - usage
-                
+               
                 medicine_data['stock_levels'].append({
                     'x': f"{year}-{month:02d}",
                     'y': cumulative_stock
