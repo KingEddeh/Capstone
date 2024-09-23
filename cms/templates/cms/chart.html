@@ -34,8 +34,8 @@
                 <div class="form-check">
                   {% for medicine in medicines %}
                     <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" name="medicines" value="{{ medicine.id }}" id="medicine-{{ medicine.id }}">
-                      <label class="form-check-label" for="medicine-{{ medicine.id }}">{{ medicine.medicine__brand_name }}</label>
+                      <input class="form-check-input" type="checkbox" name="medicines" value="{{ medicine.medicine_id }}" id="medicine-{{ medicine.medicine_id }}">
+                      <label class="form-check-label" for="medicine-{{ medicine.medicine_id }}">{{ medicine.medicine__brand_name }}</label>
                     </div>
                   {% endfor %}
                 </div>

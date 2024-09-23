@@ -751,8 +751,9 @@ def chart_view(request):
     # Prepare data for each selected medicine
     data = []
     for medicine_id in selected_medicines:
+        medicine = Stock.objects.filter(medicine_id=medicine_id).first().medicine
         medicine_data = {
-            'name': Stock.objects.get(id=medicine_id).medicine.brand_name,
+            'name': medicine.brand_name,
             'stock_levels': [],
             'usage': []
         }
@@ -760,19 +761,19 @@ def chart_view(request):
         cumulative_stock = 0  # Initialize cumulative stock
         for year in years:
             for month in range(1, 13):
-                # Get stock added this month
+                # Aggregate stock for the selected medicine across all entries
                 stock_added = Stock.objects.filter(
                     medicine_id=medicine_id,
                     created_at__year=year,
                     created_at__month=month
-                ).aggregate(Sum('initial_stocks'))['initial_stocks__sum'] or 0
-                
-                # Get usage for this month
+                ).aggregate(total_stock=Sum(F('initial_stocks')))['total_stock'] or 0
+
+                # Aggregate usage for the selected medicine across all prescriptions
                 usage = Prescription.objects.filter(
                     medicine_id=medicine_id,
                     created_at__year=year,
                     created_at__month=month
-                ).aggregate(Sum('quantity_prescribed'))['quantity_prescribed__sum'] or 0
+                ).aggregate(total_usage=Sum('quantity_prescribed'))['total_usage'] or 0
                 
                 # Update cumulative stock
                 cumulative_stock += stock_added - usage
@@ -792,7 +793,7 @@ def chart_view(request):
         return JsonResponse(data, safe=False)
    
     # If not an AJAX request, render the template
-    medicines = Stock.objects.values('id', 'medicine__brand_name').distinct()
+    medicines = Stock.objects.values('medicine_id', 'medicine__brand_name').distinct()
     years = Stock.objects.dates('created_at', 'year').distinct()
    
     return render(request, 'cms/chart.html', {
