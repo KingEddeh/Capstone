@@ -44,14 +44,14 @@
 <body>
 
   <!-- ======= Header ======= -->
-  <header id="header" class="header fixed-top d-flex align-items-center">
+  <header id="header" class="header fixed-top d-flex align-items-center" style="background-color: maroon;">
 
     <div class="d-flex align-items-center justify-content-between">
       <a href={% url 'Dashboard' %} class="logo d-flex align-items-center">
         <img src="{% static "cms/assets/img/dhvsu_logo.png" %}" alt="">
-        <span class="d-none d-lg-block">Clinic Management System</span>
+        <span style="color: White; font-family: 'Times New Roman', serif;" class="d-none d-lg-block">Clinic Management System</span>
       </a>
-      <i class="bi bi-list toggle-sidebar-btn"></i>
+      <i style="color: #f6f6f6;" class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
 
     <nav class="header-nav ms-auto">
@@ -60,8 +60,7 @@
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="{% static "cms/assets/img/profile-img.jpg" %}" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">{{ user.username }}</span>
+            <span style="color: #f6f6f6;" class="d-none d-md-block dropdown-toggle ps-2">{{ user.username }}</span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
@@ -101,65 +100,70 @@
   </header><!-- End Header -->
 
   <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
+  <aside style="background-color: #364150;" id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href={% url "Dashboard" %}>
+        <a style="background-color: #364150; color: #f6f6f6;" class="nav-link collapsed" href={% url "Dashboard" %}>
           <i class="bi bi-house"></i>
           <span>Dashboard</span>
         </a>
       </li><!-- End Patient Data Nav -->
 
+      <hr>
+      <li class="nav-heading">Patient</li>
+
       <li class="nav-item">
-        <a class="nav-link collapsed" href={% url "Patient Data" %}>
+        <a style="background-color: #364150; color: #f6f6f6;" class="nav-link collapsed" href={% url "Patient Data" %}>
           <i class="bi bi-people"></i>
           <span>Patient Management</span>
         </a>
       </li><!-- End Patient Data Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'department_cases_chart' %}">
+        <a style="background-color: #364150; color: #f6f6f6;" class="nav-link collapsed" href="{% url 'department_cases_chart' %}">
           <i class="bi bi-graph-up"></i>
           <span>Patient Data Analytics</span>
         </a>
       </li>
       
+      <hr>
       <li class="nav-heading">Logbooks</li>
       
       <li class="nav-item">
-        <a class="nav-link collapsed" href={% url "Medcert Data" %}>
+        <a style="background-color: #364150; color: #f6f6f6;" class="nav-link collapsed" href={% url "Medcert Data" %}>
           <i class="bi bi-file-earmark-text"></i>
           <span>Medical Certificate Logbook</span>
         </a>
       </li><!-- End Medical Certificate Logbook Nav -->
       
       <li class="nav-item">
-        <a class="nav-link collapsed" href={% url "Referral Data" %}>
+        <a style="background-color: #364150; color: #f6f6f6;" class="nav-link collapsed" href={% url "Referral Data" %}>
           <i class="bi bi-journal-medical"></i>
           <span>Hospital Referral Logbook</span>
         </a>
       </li><!-- End Hospital Referral Logbook Nav -->
       
       <li class="nav-item">
-        <a class="nav-link collapsed" href={% url "Treatment Data" 0 %}>
+        <a style="background-color: #364150; color: #f6f6f6;" class="nav-link collapsed" href={% url "Treatment Data" 0 %}>
           <i class="bi bi-heart-pulse"></i>
           <span>Treatment Logbook</span>
         </a>
       </li><!-- End Treatment Logbook Nav -->
 
+      <hr>
       <li class="nav-heading">Inventory</li>
       
       <li class="nav-item">
-        <a class="nav-link collapsed" href={% url "Inventory Data" %}>
+        <a style="background-color: #364150; color: #f6f6f6;" class="nav-link collapsed" href={% url "Inventory Data" %}>
           <i class="bi bi-box-seam"></i>
           <span>Inventory Management</span>
         </a>
       </li><!-- End Inventory Nav -->
       
       <li class="nav-item">
-        <a class="nav-link collapsed" href={% url "chart" %}>
+        <a style="background-color: #364150; color: #f6f6f6;" class="nav-link collapsed" href={% url "chart" %}>
           <i class="bi bi-bar-chart-line"></i>
           <span>Inventory Data Analytics</span>
         </a>
@@ -168,7 +172,7 @@
 
   </aside><!-- End Sidebar-->
 
-  <main id="main" class="main">
+  <main id="main" class="main" style="background-color: #f1f3fa;">
     {% block content %}
     
     {% endblock content %}

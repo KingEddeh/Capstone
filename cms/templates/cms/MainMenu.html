@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="pagetitle">
-    <h1>Dashboard</h1>
+    <h1 class="m-3">Welcome, {{ user.username }} </h1>
 </div><!-- End Page Title -->
 
 <section class="section dashboard">
@@ -237,8 +237,8 @@
                         <i class="bi bi-{{ forloop.counter }}-circle"></i>
                         </div>
                         <div class="ps-3">
-                        <h6>{{ object }}</h6>
-                        <span class="text-muted small pt-2 ps-1">Stock left: {{ object.current_stock }}</span>
+                        <h6>{{ object.medicine__brand_name }}</h6>
+                        <span class="text-muted small pt-2 ps-1">Stock left: {{ object.total_stock }}</span>
                         </div>
                     </div>
                 {% empty %}

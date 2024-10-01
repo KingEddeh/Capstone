@@ -92,7 +92,7 @@ class InventoryForm(forms.ModelForm):
             'stock_quantity': forms.NumberInput(attrs={'class': 'form-control'}),
             'unit': s2forms.Select2Widget(attrs={'class': 'form-select'}),
             'quantity_per_unit': forms.NumberInput(attrs={'class': 'form-control'}),
-            'expiration_date': forms.DateInput(attrs={'class': 'form-control'}),
+            'expiration_date': forms.DateInput(attrs={'class': 'form-control datepicker'}),
         }
 
 class PrescriptionForm(forms.ModelForm):

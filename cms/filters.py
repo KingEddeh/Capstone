@@ -21,12 +21,7 @@ class PatientFilter(BootstrapFilterSet):
     updated_at = django_filters.DateFromToRangeFilter(
         widget=RangeWidget(attrs={'placeholder': 'YYYY-MM-DD', 'type': 'date', 'class': 'form-control'})
     )
-    birthday = django_filters.DateFromToRangeFilter(
-        widget=RangeWidget(attrs={'placeholder': 'YYYY-MM-DD', 'type': 'date', 'class': 'form-control'})
-    )
-    year = django_filters.NumberFilter(field_name='year', widget=NumberInput(attrs={'class': 'form-control'}))
     contact_number = django_filters.NumberFilter(field_name='contact_number', widget=NumberInput(attrs={'class': 'form-control'}))
-    emergency_number = django_filters.NumberFilter(field_name='emergency_number', widget=NumberInput(attrs={'class': 'form-control'}))
     class Meta:
         model = patient
         fields = '__all__'

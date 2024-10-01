@@ -25,6 +25,7 @@
                     <table class="table datatable">
                         <thead>
                             <tr>
+                                <th class="table-primary">ID</th>
                                 <th class="table-primary">Brand Name</th>
                                 <th class="table-primary">Generic Name</th>
                                 <th class="table-primary">Dosage Form</th>
@@ -35,6 +36,7 @@
                         <tbody>
                             {% for Medicine in records %}
                             <tr>
+                                <td>{{Medicine.id}}</td>
                                 <td>{{Medicine.brand_name}}</td>
                                 <td>{{Medicine.generic_name}}</td>
                                 <td>{{Medicine.dosage_form}}</td>

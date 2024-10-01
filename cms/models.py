@@ -177,15 +177,48 @@ class Prescription(models.Model):
     provider_updated = models.CharField(max_length=100, blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.pk:  # This is a new prescription
+        # Fetch the original quantity prescribed (if the object already exists)
+        if self.pk:
+            original_prescription = Prescription.objects.get(pk=self.pk)
+            original_quantity = original_prescription.quantity_prescribed
+            original_stock = original_prescription.stock
+        else:
+            original_quantity = None
+            original_stock = None
+        
+        # Check if it's a new prescription
+        if not self.pk:
             self.medicine = self.stock.medicine.brand_name
+            # Ensure there's enough stock for the new prescription
             if self.stock.current_stock >= self.quantity_prescribed:
                 self.stock.current_stock -= self.quantity_prescribed
                 self.stock.save()
             else:
                 raise ValueError(f"Not enough stock for {self.stock.medicine.brand_name}")
+        
+        # Handle updates
+        else:
+            # If the stock was changed, reverse the quantity from the original stock
+            if original_stock != self.stock:
+                original_stock.current_stock += original_quantity
+                original_stock.save()
+
+                if self.stock.current_stock >= self.quantity_prescribed:
+                    self.stock.current_stock -= self.quantity_prescribed
+                else:
+                    raise ValueError(f"Not enough stock for {self.stock.medicine.brand_name}")
+            else:
+                # Adjust stock based on the difference between original and new quantity prescribed
+                quantity_difference = self.quantity_prescribed - original_quantity
+                if self.stock.current_stock >= quantity_difference:
+                    self.stock.current_stock -= quantity_difference
+                else:
+                    raise ValueError(f"Not enough stock for {self.stock.medicine.brand_name}")
+            
+            self.stock.save()
+
         return super().save(*args, **kwargs)
-    
+
     def delete(self, *args, **kwargs):
         self.stock.current_stock += self.quantity_prescribed
         self.stock.save()

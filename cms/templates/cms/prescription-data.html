@@ -30,6 +30,7 @@
                                 <th class="table-primary">Medicine</th>
                                 <th class="table-primary">Quantity Prescribed</th>
                                 <th class="table-primary">Description</th>
+                                <th class="table-primary">Provider</th>
                                 <th class="table-primary">Actions</th>
                                 <th class="table-primary"></th>
                             </tr>
@@ -40,6 +41,7 @@
                                 <td>{{Prescription.stock}}</td>
                                 <td>{{Prescription.quantity_prescribed}}</td>
                                 <td>{{Prescription.description}}</td>
+                                <td>{{Prescription.provider}}</td>
                                 <td>
                                     <a href="{% url "Prescription Update" Prescription.id p.id%}"><button class="btn btn-primary" type="button">Update</button></a>
                                     <a href="{% url "Prescription Delete" Prescription.id p.id%}"><button class="btn btn-danger" type="button">Delete</button></a>

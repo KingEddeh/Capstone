@@ -73,7 +73,9 @@ def dashboard_view(request):
     
     # LOW STOCKS CARD-------------------------------------------
 
-    low_stocks = Stock.objects.filter(current_stock__lt=20, current_stock__gt=0, disposed=False)
+    low_stocks = Stock.objects.values('medicine__brand_name') \
+    .annotate(total_stock=Sum('current_stock')) \
+    .filter(total_stock__lt=20, total_stock__gt=0, disposed=False)
     
     context = {
         'number_of_patients': number_of_patients,
@@ -158,7 +160,7 @@ def patientform_delete_view(request, pk):
             p.delete()
             return redirect('Patient Data')
         except RestrictedError as e:
-            messages.error(request, f"{p} cannot be deleted with existing records. Error: {str(e)}")
+            messages.error(request, f"{p} cannot be deleted with existing records; delete their records first.")
     
     context = {'p': p}
     return render(request, 'cms/patient-delete.html', context)
@@ -427,7 +429,7 @@ def treatmentform_delete_view(request, pk):
             p.delete()
             return redirect('Treatment Data', fk=p.unique_number.id)
         except RestrictedError as e:
-            messages.error(request, f"{p} cannot be deleted with existing prescriptions referencing this treatment record. Error: {str(e)}")
+            messages.error(request, f"{p} cannot be deleted when there are prescriptions in the record.")
 
     context = {'p':p}
 
@@ -503,7 +505,7 @@ def inventoryform_update_view(request, pk):
                 inventory_instance.provider_updated = request.user.username
                 form.save()
             except IntegrityError as e:
-                messages.error(request, f"Updated stock is less than the stock already used in prescriptions. Error: {str(e)}")
+                messages.error(request, f"Updated stock cannot be less than stock already used.")
                 return redirect('Inventory Update', pk=pk)
 
             return redirect('Inventory Data')
@@ -521,7 +523,7 @@ def inventoryform_delete_view(request, pk):
             p.delete()
             return redirect('Inventory Data')
         except RestrictedError as e:
-            messages.error(request, f"{p} cannot be deleted with exisitng prescriptions referencing this stock. Error:{str(e)}")
+            messages.error(request, f"{p} cannot be deleted when there are exisitng prescriptions using this stock.")
             return redirect('Inventory Delete', pk=pk)
 
     context = {'p':p}
@@ -610,7 +612,7 @@ def medicineform_delete_view(request, pk):
             p.delete()
             return redirect('Treatment Data', fk=p.unique_number.id)
         except RestrictedError as e:
-            messages.error(request, f"{p} cannot be deleted with existing stocks referencing this medicine. Error: {str(e)}")
+            messages.error(request, f"{p} cannot be deleted when there are stocks referencing this medicine.")
 
     context = {'p':p}
 
@@ -670,7 +672,7 @@ def prescriptionform_add_view(request, fk):
                 prescription_instance.treatment_logbook = p
                 form.save()
             except ValueError as e:
-                messages.error(request, f"Not Enough Stock. Error: {str(e)}")
+                messages.error(request, f"Not Enough Stock.")
                 return redirect('Prescription Add', fk=fk)
 
             return redirect('Prescription Data', fk=fk)
@@ -695,7 +697,7 @@ def prescriptionform_update_view(request, pk, fk):
                 prescription_instance.provider_updated = request.user.username
                 form.save()
             except ValueError as e:
-                messages.error(request, f"Not Enough Stock. Error: {str(e)}")
+                messages.error(request, f"Not Enough Stock.")
                 return redirect('Prescription Add', fk=fk)
 
             return redirect('Prescription Data', fk=fk)
