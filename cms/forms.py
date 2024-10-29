@@ -94,6 +94,11 @@ class InventoryForm(forms.ModelForm):
             'quantity_per_unit': forms.NumberInput(attrs={'class': 'form-control'}),
             'expiration_date': forms.DateInput(attrs={'class': 'form-control datepicker'}),
         }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        today = timezone.now().date()
+        self.fields['medicine'].queryset = Medicine.objects.order_by('-created_at')
 
 class PrescriptionForm(forms.ModelForm):
     class Meta:
@@ -111,7 +116,7 @@ class PrescriptionForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         today = timezone.now().date()
         self.fields['stock'].queryset = Stock.objects.filter(
-            expiration_date__gt=today,
+            expiration_date__gte=today,
             current_stock__gt=0,
             disposed=False
-        )
+        ).order_by('-created_at')
