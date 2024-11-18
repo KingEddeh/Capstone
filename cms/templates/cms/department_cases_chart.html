@@ -1,4 +1,5 @@
 {% extends "cms/base.html" %}
+{% load static %}
 {% block title %}Department Cases Analytics{% endblock title %}
 {% block content %}
 <div class="container">
@@ -44,6 +45,117 @@
       </div>
     </div>
     <!-- End Department Cases Chart -->
+  </div>
+
+  <!-- Legend -->
+  <div class="row">
+    <div class="d-flex flex-wrap justify-content-center" style="gap: 16px;">
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/elementary.png" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title"> A. ALIMENTARY SYSTEM </h5>
+          <p class="card-text">Nausea, Vomiting, Hyperacidity, Heartburn, Dyspepsia, Infectious, Diarrhea, Constipation</p>
+        </div>
+      </div>
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/Respiratory_System.png" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">B. RESPIRATORY SYSTEM</h5>
+          <p class="card-text">Cough, Colds, Fever, Bronchial Asthma, Difficulty of Breathing, Pneumonia</p>
+        </div>
+      </div>
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/Musculo.png" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">C. MUSCULO SKELETAL SYSTEM</h5>
+          <p class="card-text">Osteoarthritis, Osteochondritis, Muscle and Joint Spasm, Sprain, Strain, Fracture, Dislocation</p>
+        </div>
+      </div>
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/integumentary.png" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">D. INTEGUMENTARY SYSTEM</h5>
+          <p class="card-text">Burns, Cut Abrasion, Laceration, Bruise, Puncture, Minor Surgery, Skin Disease, Allergies, Infected Wound, Animal Bite</p>
+        </div>
+      </div>
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/urinary.png" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">E. URINARY SYSTEM</h5>
+          <p class="card-text">UTI</p>
+        </div>
+      </div>
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/endocrine.png" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">F. METABOLIC ENDOCRINE SYSTEM</h5>
+          <p class="card-text">Diabetes, Hyperthyroidism, Hypothryroidism, Dyslipidemia</p>
+        </div>
+      </div>
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/cardiovascular.png" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">G. CARDIOVASCULAR SYSTEM</h5>
+          <p class="card-text">Chest Pain, Hypertension, Hypotension, Arrhythmias, Bradycardia, Tachycardia</p>
+        </div>
+      </div>
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/Eyes_Ears_Nose.png" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">H. EYES, EARS, NOSE & THROAT DISORDERS</h5>
+          <p class="card-text">Sty, Fungal or Bacterial Infection, Foreign body, Vertigo, Otitis Media/Externa, Sinusitis, Epistaxis, Pharyngitis, Laryngitis, Tonsillitis, Rhinitis</p>
+        </div>
+      </div>
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/throat.png" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">I. COMMUNICABLE DISEASES</h5>
+          <p class="card-text">Conjunctivitis, Boils Measles, Chicken Pox, Mumps, Hepatitis, Tubercolosis, Leptospirosis, COVID Suspect, Viral Exanthem</p>
+        </div>
+      </div>
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/blood.png" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">J. BLOOD DISORDERS</h5>
+          <p class="card-text">Osteoarthritis, Osteochondritis, Muscle and Joint Spasm, Sprain, Strain, Fracture, Dislocation</p>
+        </div>
+      </div>
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/neurological.png" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">K. NEUROLOGICAL DISORDERS</h5>
+          <p class="card-text">Hyperventilation, Anxiety Attack, Panic Attak, Headache, Migraine, Syncope, Dizziness, Epilepsy, Seizure, Insomnia</p>
+        </div>
+      </div>
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/gynecology.jpg" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">L. OB-GYNE CASES</h5>
+          <p class="card-text">Dysmenorrhea, Pregnancy, Polycystic Ovarian Syndrome, Menstrual Disorders</p>
+        </div>
+      </div>
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/dental.webp" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">M. DENTAL CASES</h5>
+          <p class="card-text">N/A</p>
+        </div>
+      </div>
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/physical.webp" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">N. PHYSICAL EXAMINATIONS</h5>
+          <p class="card-text">Medical Certificate / Clearance Issued</p>
+        </div>
+      </div>
+      <div class="card" style="width: 19rem;">
+        <img class="card-img-top mx-auto" style="width: 200px; height: 200px; object-fit: cover;" src="{% static "cms/assets/img/referral.jpg" %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">O. REFERRALS </h5>
+          <p class="card-text">Laboratory and Diagnostic Test Request, Specialist</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock content %}

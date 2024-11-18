@@ -43,6 +43,7 @@
                                 <td>
                                     <a href="{% url "Medcert Update" Medicalcertificate_logbook.id %}"><button class="btn btn-primary" type="button">Update</button></a>
                                     <a href="{% url "Medcert Delete" Medicalcertificate_logbook.id %}"><button class="btn btn-danger" type="button">Delete</button></a>
+                                    <a href="{% url "Medcert PDF" Medicalcertificate_logbook.id %}"><button class="btn btn-secondary" type="button">Generate PDF</button></a>
                                 </td>
                             </tr>
                             {% endfor %}

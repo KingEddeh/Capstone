@@ -1,5 +1,5 @@
 from django.urls import include, path
-
+from .views_pdf import PDFMedicalCertificateView, MedicalCertificateView
 from . import views
 
 urlpatterns = [
@@ -64,4 +64,8 @@ urlpatterns = [
 
     #API==============================================================
     path('api/logbooks/', views.get_logbook_data, name="test"),
+
+    #Generate pdf medcert==============================================================
+    path('medical-certificate/<int:pk>/', MedicalCertificateView.as_view(), name='medical_certificate'),
+    path('medical-certificate/<int:pk>/pdf/', PDFMedicalCertificateView.as_view(), name='Medcert PDF'),\
 ]

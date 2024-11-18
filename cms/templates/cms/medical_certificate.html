@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    
+    <style>
+        @page {
+            size: A4;
+            margin: 2.5cm 1.5cm;
+            @top-center {
+                content: 'MEDICAL CERTIFICATE';
+                font-weight: bold;
+            }
+            @bottom-right {
+                content: counter(page);
+            }
+        }
+        
+        .letterhead {
+            text-align: center;
+            margin-bottom: 2cm;
+        }
+        
+        .certificate-body {
+            line-height: 1.6;
+            text-align: justify;
+        }
+        
+        .signature-line {
+            margin-top: 3cm;
+            text-align: right;
+        }
+        
+        .metadata {
+            position: absolute;
+            bottom: 1cm;
+            font-size: 8pt;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="letterhead">
+        <h1>DHVSU UNIVERSITY CLINIC</h1>
+        <h2>Medical Certificate</h2>
+    </div>
+
+    <div class="certificate-body">
+        <p>This is to certify that {{ medcert.unique_number }} 
+        has been examined and treated at our clinic.</p>
+
+        <p>Purpose: {{ medcert.purpose }}</p>
+        
+        {% if medcert.note %}
+        <p>Additional Notes: {{ medcert.note }}</p>
+        {% endif %}
+    </div>
+
+    <div class="signature-line">
+        <p>_________________________<br>
+        {{ medcert.provider }}<br>
+        Healthcare Provider<br>
+        License No: ____________</p>
+    </div>
+
+    <div class="metadata">
+        <p>Certificate No: {{ medcert.id }}<br>
+        Date Issued: {{ medcert.created_at|date:"F j, Y" }}<br>
+        Valid until: {{ valid_until|date:"F j, Y" }}</p>
+    </div>
+</body>
+</html>
