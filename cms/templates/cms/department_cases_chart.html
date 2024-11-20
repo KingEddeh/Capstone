@@ -161,110 +161,134 @@
 {% endblock content %}
 
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<!-- Remove any other ApexCharts references from your base template -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.41.0/apexcharts.min.js"></script>
 <script>
+  // Wait for document to be ready
   $(document).ready(function() {
+    // Chart instance variable
+    let chart = null;
+
+    // Initialize the form submission handler
     $('#filter-form').on('submit', function(e) {
       e.preventDefault();
-      var formData = $(this).serialize();
       
       $.ajax({
         url: '{% url "department_cases_chart" %}',
-        data: formData,
+        data: $(this).serialize(),
         dataType: 'json',
         success: function(data) {
-          renderDepartmentCasesChart(data);
+          try {
+            updateChart(data);
+          } catch (error) {
+            console.error('Error updating chart:', error);
+            alert('Error updating chart. Please try again.');
+          }
         },
         error: function(xhr, status, error) {
-          console.error("An error occurred: " + error);
-          alert("An error occurred while fetching data. Please try again.");
+          console.error('Ajax error:', error);
+          alert('Error fetching data. Please try again.');
         }
       });
     });
-  });
-  
-  function renderDepartmentCasesChart(data) {
-    var series = [];
-    var categories = [];
-    
-    // Prepare data for the chart
-    for (var dept in data) {
-      var deptData = [];
-      for (var category in data[dept]) {
-        if (!categories.includes(category)) {
-          categories.push(category);
+
+    function updateChart(data) {
+      // Process the data
+      const series = [];
+      const categories = [];
+      
+      for (const dept in data) {
+        const deptData = [];
+        for (const category in data[dept]) {
+          if (!categories.includes(category)) {
+            categories.push(category);
+          }
+          deptData.push(data[dept][category]);
         }
-        deptData.push(data[dept][category]);
+        series.push({
+          name: dept,
+          data: deptData
+        });
       }
-      series.push({
-        name: dept,
-        data: deptData
-      });
-    }
-  
-    var options = {
-      series: series,
-      chart: {
-        type: 'bar',
-        height: 600,
-        stacked: true,
-      },
-      plotOptions: {
-        bar: {
-          horizontal: true,
+
+      // Chart options
+      const options = {
+        series: series,
+        chart: {
+          type: 'bar',
+          height: 600,
+          stacked: true,
+          toolbar: {
+            show: true
+          },
         },
-      },
-      stroke: {
-        width: 1,
-        colors: ['#fff']
-      },
-      title: {
-        text: 'Department Cases by Category'
-      },
-      xaxis: {
-        categories: categories,
-        labels: {
-          formatter: function (val) {
-            return val
-          }
-        }
-      },
-      yaxis: {
-        title: {
-          text: undefined
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            dataLabels: {
+              total: {
+                enabled: true,
+                offsetX: 0,
+                style: {
+                  fontSize: '13px',
+                  fontWeight: 900
+                }
+              }
+            }
+          },
         },
-      },
-      tooltip: {
-        y: {
-          formatter: function (val) {
-            return val
-          }
-        }
-      },
-      fill: {
-        opacity: 1
-      },
-      legend: {
-        position: 'top',
-        horizontalAlign: 'left',
-        offsetX: 40
-      },
-      dataLabels: {
-        enabled: true,
-        formatter: function (val, opt) {
-          return opt.w.globals.seriesNames[opt.seriesIndex] + ": " + val;
-        },
-        style: {
+        stroke: {
+          width: 1,
           colors: ['#fff']
+        },
+        title: {
+          text: 'Department Cases by Category'
+        },
+        xaxis: {
+          categories: categories,
+          labels: {
+            formatter: function (val) {
+              return Math.abs(Math.round(val));
+            }
+          }
+        },
+        yaxis: {
+          title: {
+            text: undefined
+          },
+        },
+        tooltip: {
+          shared: true,
+          intersect: false
+        },
+        fill: {
+          opacity: 1
+        },
+        legend: {
+          position: 'top',
+          horizontalAlign: 'left',
+          offsetX: 40
         }
+      };
+
+      // Destroy existing chart if it exists
+      if (chart) {
+        chart.destroy();
       }
-    };
-  
-    if (window.departmentCasesChart instanceof ApexCharts) {
-      window.departmentCasesChart.destroy();
+
+      // Create new chart
+      const chartElement = document.querySelector("#department-cases-chart");
+      if (chartElement) {
+        chart = new ApexCharts(chartElement, options);
+        chart.render();
+      } else {
+        console.error('Chart container not found');
+      }
     }
-    window.departmentCasesChart = new ApexCharts(document.querySelector("#department-cases-chart"), options);
-    window.departmentCasesChart.render();
-  }
+
+    // Trigger form submission on page load
+    $('#filter-form').trigger('submit');
+  });
 </script>
 {% endblock extra_js %}
