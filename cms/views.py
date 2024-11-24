@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 import csv
 from .models import *
 from .forms import *
@@ -27,6 +27,9 @@ from django.db.models import RestrictedError
 
 
 def login_view(request):
+
+    if request.user.is_authenticated:
+        logout(request)
 
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
