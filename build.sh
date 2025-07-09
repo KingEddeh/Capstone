@@ -2,8 +2,6 @@
 # exit on error
 set -o errexit
 
-pipenv shell
-
 # Install dependencies
 pip install -r requirements.txt
 
