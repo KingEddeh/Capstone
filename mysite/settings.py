@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-4p345#*a+3^=jkxew7+g=rdey#*p9cadt_cko9#$3rog-suw_f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://clinic-management-system-f9y8.onrender.com', '127.0.0.1',]
+ALLOWED_HOSTS = ['clinic-management-system-f9y8.onrender.com', '127.0.0.1',]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://clinic-management-system-f9y8.onrender.com',
