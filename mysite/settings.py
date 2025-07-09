@@ -23,13 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-4p345#*a+3^=jkxew7+g=rdey#*p9cadt_cko9#$3rog-suw_f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['dhvsu-cms.systems', 'www.dhvsu-cms.systems', '127.0.0.1:8000', '146.190.85.83', '127.0.0.1']
+ALLOWED_HOSTS = ['https://clinic-management-system-f9y8.onrender.com', '127.0.0.1',]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://dhvsu-cms.systems',
-    'https://www.dhvsu-cms.systems',
+    'https://clinic-management-system-f9y8.onrender.com',
+    'https://127.0.0.1',
 ]
 
 
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add WhiteNoise middleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -130,9 +131,13 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = 'static/'
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
