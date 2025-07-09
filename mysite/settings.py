@@ -48,7 +48,7 @@ INSTALLED_APPS = [
 
     #external apps
     'cms',
-    'django_filter',
+    'django_filters',
     'django_select2',
 ]
 
