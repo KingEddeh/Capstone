@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 import dj_database_url
 import os
@@ -22,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4p345#*a+3^=jkxew7+g=rdey#*p9cadt_cko9#$3rog-suw_f'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-4p345#*a+3^=jkxew7+g=rdey#*p9cadt_cko9#$3rog-suw_f')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['clinic-management-system-f9y8.onrender.com', '127.0.0.1',]
+ALLOWED_HOSTS = ['clinic-management-system-f9y8.onrender.com', '127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS = [
     'https://clinic-management-system-f9y8.onrender.com',
@@ -47,7 +48,7 @@ INSTALLED_APPS = [
 
     #external apps
     'cms',
-    'django_filters',
+    'django_filter',
     'django_select2',
 ]
 
@@ -86,21 +87,17 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-if DEBUG:
+# Database configuration
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES = {'default': dj_database_url.parse(DATABASE_URL)}
+else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-else:
-    DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default='postgresql://clinic_management_system_postgres_user:hmPch4fu6JcDXCxyorM9rhPShmC8zO5p@dpg-d1n25pbuibrs73e26h80-a/clinic_management_system_postgres',
-        conn_max_age=600
-    )
-}
 
 
 # Password validation
@@ -134,20 +131,26 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# Static files configuration - FIX FOR TINYMCE
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
+# WhiteNoise configuration to ignore missing source maps
+WHITENOISE_SKIP_COMPRESS_EXTENSIONS = ['js', 'css', 'map', 'txt']
+WHITENOISE_MAX_AGE = 31536000
+
+# Use simpler storage backend to avoid source map issues
 if not DEBUG:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Security settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-CSRF_COOKIE_SECURE = True
+if not DEBUG:
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
