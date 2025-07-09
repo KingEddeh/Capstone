@@ -15,7 +15,7 @@ class patient(models.Model):
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    suffix = models.CharField(max_length=2, blank=True)
+    suffix = models.CharField(max_length=10, blank=True)
     SEX_CHOICES = [
         ("Male", "Male"),
         ("Female", "Female"),
