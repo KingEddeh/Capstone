@@ -132,8 +132,9 @@ USE_TZ = True
 
 
 # Static files configuration - FIX FOR TINYMCE
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+
 
 # WhiteNoise configuration to ignore missing source maps
 WHITENOISE_SKIP_COMPRESS_EXTENSIONS = ['js', 'css', 'map', 'txt']
